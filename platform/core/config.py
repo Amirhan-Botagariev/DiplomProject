@@ -1,5 +1,7 @@
 from pydantic import BaseModel, PostgresDsn
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+BASE_DIR = "/Users/amirhanbotagariev/PycharmProjects/fastApiProject1"
 
 
 class RunConfig(BaseModel):
@@ -20,9 +22,17 @@ class DatabaseConfig(BaseModel):
 
 
 class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=(f"{BASE_DIR}/.env.template", f"{BASE_DIR}/.env"),
+        case_sensitive=False,
+        env_nested_delimiter="__",
+        env_prefix="APP_CONFIG_",
+    )
     run: RunConfig = RunConfig()
     api: APIPrefix = APIPrefix()
     db: DatabaseConfig
 
 
 settings = Settings()
+print(settings.db.url)
+print(settings.db.echo)
