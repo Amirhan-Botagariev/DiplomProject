@@ -1,6 +1,3 @@
-def main():
-    pass
+_all_ = ("db_helper",)
 
-
-if __name__ == "__main__":
-    main()
+from .db_helper import db_helper
