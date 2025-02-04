@@ -1,0 +1,22 @@
+[project]
+name = "HR_Platform"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Amirhan Botagariev",email = "ruby.mainacc@gmail.com"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+
+[tool.poetry]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = '^3.12'
+fastapi = "^0.115.8"
+uvicorn = {extras = ["standard"], version = "^0.34.0"}
+pydantic = {extras = ["email"], version = "^2.10.6"}
+pydantic-settings = "^2.7.1"
+black = "^25.1.0"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.37"}
+asyncpg = "^0.30.0"
