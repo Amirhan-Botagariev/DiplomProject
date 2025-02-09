@@ -3,7 +3,6 @@ from typing import Annotated
 from fastapi import APIRouter
 from fastapi.params import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.testing.suite.test_reflection import users
 
 import crud.users as users_crud
 from core.models import db_helper

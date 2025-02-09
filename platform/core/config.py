@@ -1,8 +1,6 @@
 from pydantic import BaseModel, PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-BASE_DIR = "/Users/amirhanbotagariev/PycharmProjects/fastApiProject1"
-
 
 class RunConfig(BaseModel):
     host: str = "0.0.0.0"
@@ -37,7 +35,7 @@ class DatabaseConfig(BaseModel):
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=(f"{BASE_DIR}/.env.template", f"{BASE_DIR}/.env"),
+        env_file=(f".env.template", f".env"),
         case_sensitive=False,
         env_nested_delimiter="__",
         env_prefix="APP_CONFIG_",
