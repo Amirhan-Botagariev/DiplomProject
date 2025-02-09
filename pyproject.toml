@@ -21,3 +21,4 @@ black = "^25.1.0"
 sqlalchemy = {extras = ["asyncio"], version = "^2.0.37"}
 asyncpg = "^0.30.0"
 alembic = "^1.14.1"
+orjson = "^3.10.15"
