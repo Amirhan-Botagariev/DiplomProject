@@ -23,3 +23,4 @@ asyncpg = "^0.30.0"
 alembic = "^1.14.1"
 orjson = "^3.10.15"
 fastapi-users = {extras = ["sqlaclhemy"], version = "^14.0.1"}
+fastapi-users-db-sqlalchemy = "^7.0.0"
