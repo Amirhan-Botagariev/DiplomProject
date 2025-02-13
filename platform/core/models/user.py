@@ -1,7 +1,6 @@
-from sqlalchemy.orm import Mapped, mapped_column
-
 from .base import Base
+from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
 
 
-class User(Base):
-    username: Mapped[str] = mapped_column(unique=True)
+class User(Base, SQLAlchemyBaseUserTable[int]):
+    pass
