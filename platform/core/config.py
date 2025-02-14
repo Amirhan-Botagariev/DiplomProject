@@ -3,7 +3,7 @@ from pathlib import Path
 from pydantic import BaseModel, PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 class RunConfig(BaseModel):
@@ -51,6 +51,14 @@ class AccessToken(BaseModel):
     lifetime_seconds: int = 3600
 
 
+class UserDefaultConfig(BaseModel):
+    email: str = "admin@admin.com"
+    password: str = "abc"
+    is_active: bool = True
+    is_superuser: bool = True
+    is_verified: bool = True
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=(BASE_DIR / ".env.template", BASE_DIR / ".env"),
@@ -62,6 +70,7 @@ class Settings(BaseSettings):
     api: ApiPrefix = ApiPrefix()
     db: DatabaseConfig
     access_token: AccessToken
+    user_default: UserDefaultConfig = UserDefaultConfig()
 
 
 settings = Settings()
