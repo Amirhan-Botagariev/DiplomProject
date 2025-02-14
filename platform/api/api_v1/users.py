@@ -8,7 +8,7 @@ import crud.users as users_crud
 from core.models import db_helper
 from core.schemas.user import UserRead, UserCreate
 
-router = APIRouter(tags=["Users"])
+router = APIRouter()
 
 
 @router.get("/", response_model=list[UserRead])
