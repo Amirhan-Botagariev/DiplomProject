@@ -1,14 +1,13 @@
-import uuid
 from typing import TYPE_CHECKING, Annotated
 
 from fastapi import Depends
 from fastapi_users.authentication.strategy.db import DatabaseStrategy
 
-from .access_tokens import get_access_tokens_db
 from core.config import settings
+from .access_tokens import get_access_tokens_db
+from fastapi_users.authentication.strategy.db import AccessTokenDatabase
 
 if TYPE_CHECKING:
-    from fastapi_users.authentication.strategy.db import AccessTokenDatabase
     from core.models import AccessToken
 
 
