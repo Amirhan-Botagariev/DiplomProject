@@ -4,15 +4,15 @@ services:
     image: postgres
     environment:
       POSTGRES_DB: platform
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: pwd
     ports:
       - "5432:5432"
 
   maildev:
     image: maildev/maildev
     environment:
-      - TZ=Europe/Moscow
+      - TZ=Asia/Astana
       - MAILDEV_WEB_PORT=1080
       - MAILDEV_SMTP_PORT=1025
     ports:
