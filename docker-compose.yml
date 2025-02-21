@@ -1,38 +1,71 @@
+version: "3.8"
+# TODO: Рассмотреть полностью контейнеры и изменить при нужде
 services:
-
   pg:
     image: postgres
+    container_name: pg_container
     environment:
       POSTGRES_DB: platform
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: pwd
     ports:
       - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    restart: always
 
   maildev:
     image: maildev/maildev
+    container_name: maildev_container
     environment:
       - TZ=Asia/Astana
       - MAILDEV_WEB_PORT=1080
       - MAILDEV_SMTP_PORT=1025
     ports:
-      - "8080:1080"
+      - "8081:1080"
       - "1025:1025"
     logging:
       driver: "json-file"
       options:
         max-size: "1m"
+    restart: unless-stopped
 
   adminer:
     image: adminer
+    container_name: adminer_container
+    depends_on:
+      - pg
     ports:
       - "8080:8080"
+    restart: unless-stopped
 
   pgadmin:
     image: dpage/pgadmin4
+    container_name: pgadmin_container
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.org
       PGADMIN_DEFAULT_PASSWORD: admin
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     ports:
       - "5050:80"
+    depends_on:
+      - pg
+    restart: unless-stopped
+
+  platform:
+    build:
+      context: .
+      dockerfile: sys/gunicorn/Dockerfile
+    container_name: app_container
+    depends_on:
+      - pg
+    volumes:
+      - .:/code
+    working_dir: /code
+    command: [ "poetry", "run", "python", "platform/run_main.py" ]
+    environment:
+      - DATABASE_URL=postgresql://admin:pwd@pg:5432/platform
+    restart: on-failure
+
+volumes:
+  pg_data:
