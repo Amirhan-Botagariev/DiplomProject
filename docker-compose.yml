@@ -1,10 +1,8 @@
-version: "3.8"
-# TODO: Рассмотреть полностью контейнеры и изменить при нужде
 services:
   pg:
     build:
-      context: ./custom_pg
-    container_name: pg_container
+      context: ./sys/postgres
+    container_name: pg
     environment:
       POSTGRES_DB: platform
       POSTGRES_USER: admin
@@ -14,10 +12,12 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
     restart: always
+    networks:
+      - platform
 
   maildev:
     image: maildev/maildev
-    container_name: maildev_container
+    container_name: mail_developer
     environment:
       - TZ=Asia/Astana
       - MAILDEV_WEB_PORT=1080
@@ -30,19 +30,23 @@ services:
       options:
         max-size: "1m"
     restart: unless-stopped
+    networks:
+      - platform
 
   adminer:
     image: adminer
-    container_name: adminer_container
+    container_name: adminer
     depends_on:
       - pg
     ports:
-      - "8080:8080"
+      - "8082:8080"
     restart: unless-stopped
+    networks:
+      - platform
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadmin_container
+    container_name: pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.org
       PGADMIN_DEFAULT_PASSWORD: admin
@@ -52,12 +56,14 @@ services:
     depends_on:
       - pg
     restart: unless-stopped
+    networks:
+      - platform
 
   platform:
     build:
       context: .
       dockerfile: sys/gunicorn/Dockerfile
-    container_name: app_container
+    container_name: app
     depends_on:
       - pg
     volumes:
@@ -66,7 +72,15 @@ services:
     command: [ "poetry", "run", "python", "platform/run_main.py" ]
     environment:
       - DATABASE_URL=postgresql://admin:pwd@pg:5432/platform
+    ports:
+      - "8000:8000"
     restart: on-failure
+    networks:
+      - platform
 
 volumes:
   pg_data:
+
+networks:
+  platform:
+    driver: bridge
