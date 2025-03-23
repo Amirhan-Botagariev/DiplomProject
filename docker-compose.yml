@@ -2,7 +2,8 @@ version: "3.8"
 # TODO: Рассмотреть полностью контейнеры и изменить при нужде
 services:
   pg:
-    image: postgres
+    build:
+      context: ./custom_pg
     container_name: pg_container
     environment:
       POSTGRES_DB: platform
