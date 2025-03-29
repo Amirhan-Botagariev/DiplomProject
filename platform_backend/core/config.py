@@ -31,7 +31,11 @@ class LoggingConfig(BaseModel):
         "critical",
     ] = "info"
     log_format: str = LOG_DEFAULT_FORMAT
+    log_dir: str = "tmp/log"
 
+    @property
+    def log_file(self) -> str:
+        return os.path.join(self.log_dir, f"{datetime.now().strftime('%d-%m-%Y')}.log")
 
 class ApiV1Prefix(BaseModel):
     prefix: str = "/v1"

@@ -1,4 +1,7 @@
 from typing import AsyncGenerator
+import logging
+
+logger = logging.getLogger(__name__)
 
 from sqlalchemy.ext.asyncio import (
     create_async_engine,
@@ -34,10 +37,14 @@ class DatabaseHelper:
             expire_on_commit=False,
         )
 
+        logger.info("Initialized DatabaseHelper with URL: %s", url)
+
     async def dispose(self) -> None:
+        logger.info("Disposing database engine.")
         await self.engine.dispose()
 
     async def session_getter(self) -> AsyncGenerator[AsyncSession, None]:
+        logger.info("Creating new async session.")
         async with self.session_factory() as session:
             yield session
 

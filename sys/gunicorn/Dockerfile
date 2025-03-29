@@ -8,17 +8,17 @@ RUN curl -sSL https://install.python-poetry.org | python3 -
 ENV PATH="/root/.local/bin:$PATH"
 
 # Устанавливаем рабочую директорию
-WORKDIR /code
+WORKDIR /platform/platform_backend
 
 # Копируем файлы с зависимостями
-COPY pyproject.toml poetry.lock ./
+COPY platform_backend/pyproject.toml platform_backend/poetry.lock ./
 
 # Отключаем виртуальное окружение внутри Poetry
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi
 
 # Копируем весь проект в контейнер
-COPY . /code/
+COPY . .
 
 # Команда для запуска приложения
-CMD ["poetry", "run", "python", "platform/run_main.py"]
+CMD ["poetry", "run", "python", "run_main.py"]

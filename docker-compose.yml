@@ -67,11 +67,11 @@ services:
     depends_on:
       - pg
     volumes:
-      - .:/code
-    working_dir: /code
-    command: [ "poetry", "run", "python", "platform/run_main.py" ]
+      - .:/platform
+    working_dir: /platform/platform_backend
+    command: ["/bin/sh", "-c", "poetry run alembic -c alembic.ini upgrade head && poetry run python run_main.py"]
     environment:
-      - DATABASE_URL=postgresql://admin:pwd@pg:5432/platform
+      - DATABASE_URL=postgresql://admin:pwd@pg:5432/platform_backend
     ports:
       - "8000:8000"
     restart: on-failure
