@@ -77,6 +77,17 @@ services:
     restart: on-failure
     networks:
       - platform
+  frontend:
+    build:
+      context: .
+      dockerfile: sys/frontend/Dockerfile
+    container_name: frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - platform
+    networks:
+      - platform
 
 volumes:
   pg_data:
