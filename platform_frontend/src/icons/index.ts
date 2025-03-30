@@ -8,13 +8,13 @@ import ErrorIcon from "./info-error.svg?react";
 import BoltIcon from "./bolt.svg?react";
 import ArrowUpIcon from "./arrow-up.svg?react";
 import ArrowDownIcon from "./arrow-down.svg?react";
+import ArrowRightIcon from "./arrow-right.svg?react";
+import ArrowLeftIcon from "./arrow-left.svg?react";
 import FolderIcon from "./folder.svg?react";
 import VideoIcon from "./videos.svg?react";
 import AudioIcon from "./audio.svg?react";
 import GridIcon from "./grid.svg?react";
 import FileIcon from "./file.svg?react";
-import DownloadIcon from "./download.svg?react";
-import ArrowRightIcon from "./arrow-right.svg?react";
 import GroupIcon from "./group.svg?react";
 import BoxIconLine from "./box-line.svg?react";
 import ShootingStarIcon from "./shooting-star.svg?react";
@@ -27,6 +27,7 @@ import CheckLineIcon from "./check-line.svg?react";
 import CloseLineIcon from "./close-line.svg?react";
 import ChevronDownIcon from "./chevron-down.svg?react";
 import ChevronUpIcon from "./chevron-up.svg?react";
+import ChevronLeftIcon from "./chevron-left.svg?react";
 import PaperPlaneIcon from "./paper-plane.svg?react";
 import LockIcon from "./lock.svg?react";
 import EnvelopeIcon from "./envelope.svg?react";
@@ -36,7 +37,6 @@ import EyeIcon from "./eye.svg?react";
 import EyeCloseIcon from "./eye-close.svg?react";
 import TimeIcon from "./time.svg?react";
 import CopyIcon from "./copy.svg?react";
-import ChevronLeftIcon from "./chevron-left.svg?react";
 import UserCircleIcon from "./user-circle.svg?react";
 import TaskIcon from "./task-icon.svg?react";
 import ListIcon from "./list.svg?react";
@@ -53,6 +53,15 @@ import MoreDotIcon from "./moredot.svg?react";
 import AlertHexaIcon from "./alert-hexa.svg?react";
 import ErrorHexaIcon from "./info-hexa.svg?react";
 
+// Добавь новые SVG сюда:
+import DashboardIcon from "./dashboard.svg?react";
+import ReportsIcon from "./reports.svg?react";
+import UsersIcon from "./users.svg?react";
+import OrdersIcon from "./orders.svg?react";
+import DepartmentsIcon from "./departments.svg?react";
+import HelpIcon from "./help.svg?react";
+import SettingsIcon from "./settings.svg?react";
+
 export {
   PlusIcon,
   CloseIcon,
@@ -64,13 +73,13 @@ export {
   BoltIcon,
   ArrowUpIcon,
   ArrowDownIcon,
+  ArrowRightIcon,
+  ArrowLeftIcon,
   FolderIcon,
   VideoIcon,
   AudioIcon,
   GridIcon,
   FileIcon,
-  DownloadIcon,
-  ArrowRightIcon,
   GroupIcon,
   BoxIconLine,
   ShootingStarIcon,
@@ -83,6 +92,7 @@ export {
   CloseLineIcon,
   ChevronDownIcon,
   ChevronUpIcon,
+  ChevronLeftIcon,
   PaperPlaneIcon,
   LockIcon,
   EnvelopeIcon,
@@ -92,7 +102,6 @@ export {
   EyeCloseIcon,
   TimeIcon,
   CopyIcon,
-  ChevronLeftIcon,
   UserCircleIcon,
   TaskIcon,
   ListIcon,
@@ -108,4 +117,11 @@ export {
   MoreDotIcon,
   AlertHexaIcon,
   ErrorHexaIcon,
+  DashboardIcon,
+  ReportsIcon,
+  UsersIcon,
+  OrdersIcon,
+  DepartmentsIcon,
+  HelpIcon,
+  SettingsIcon,
 };

@@ -1,7 +1,7 @@
 import SearchIcon from "../icons/search.svg?react";
 import MailIcon from "../icons/mail.svg?react";
-import ArrowDownIcon from "../icons/profile-arrow-down.svg?react";
 import ProfileIcon from "../icons/profile.svg?react";
+import ArrowDownIcon from "../icons/arrow-down.svg?react";
 
 const Header = () => {
   return (
@@ -24,14 +24,11 @@ const Header = () => {
       </div>
 
       {/* Иконки справа */}
-      <div className="flex items-center gap-4">
-        {/* Почта */}
-        <MailIcon className="w-5 h-5 cursor-pointer" />
-
-        {/* Профиль */}
-        <div className="flex items-center gap-1 cursor-pointer">
-          <ProfileIcon className="w-6 h-6" />
-          <ArrowDownIcon className="w-2.5 h-2.5" />
+      <div className="flex items-center gap-6">
+        <MailIcon className="w-[21px] h-[21px] text-black" />
+        <div className="flex items-center gap-2 cursor-pointer">
+          <ProfileIcon className="w-[21px] h-[21px] text-black" />
+          <ArrowDownIcon className="w-[10px] h-[10px] text-black" />
         </div>
       </div>
     </header>

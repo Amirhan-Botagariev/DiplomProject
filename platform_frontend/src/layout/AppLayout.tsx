@@ -1,16 +1,24 @@
 import { Outlet } from "react-router-dom";
+import { useState } from "react";
+import Header from "./Header";
 import Sidebar from "./Sidebar";
-import SearchHeader from "./Header";
 
 const AppLayout = () => {
-  return (
-    <div className="flex">
-      <Sidebar />
+  const [collapsed, setCollapsed] = useState(false);
 
-      <div className="flex-1 ml-[259px]">
-        {/* ⬅️ отступ слева для основного контента */}
-        <SearchHeader />
-        <main className="p-8 bg-[#FAFAFA] min-h-screen">
+  return (
+    <div className="min-h-screen w-full bg-[#FAFAFA]">
+      {/* Sidebar */}
+      <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
+
+      {/* Main layout with dynamic margin-left */}
+      <div
+        className={`transition-all duration-300 ${
+          collapsed ? "ml-[80px]" : "ml-[260px]"
+        }`}
+      >
+        <Header />
+        <main className="p-8">
           <Outlet />
         </main>
       </div>

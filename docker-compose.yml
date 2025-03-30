@@ -88,6 +88,19 @@ services:
       - platform
     networks:
       - platform
+  frontend-dev:
+    image: node:20
+    container_name: frontend-dev
+    working_dir: /app
+    volumes:
+      - ./platform_frontend:/app
+    command: sh -c "npm install && npm run dev -- --host"
+    ports:
+      - "5173:5173"
+    networks:
+      - platform
+    environment:
+      - TZ=Asia/Almaty
 
 volumes:
   pg_data:
