@@ -3,9 +3,9 @@ import contextlib
 
 from pydantic import EmailStr
 
-from api.dependencies.authentication import get_user_manager
-from api.dependencies.authentication import get_users_db
-from core.authentication.user_manager import UserManager
+from libraries.fastapi_users.dependencies.authentication import get_user_manager
+from libraries.fastapi_users.dependencies.authentication import get_users_db
+from libraries.fastapi_users.authentication.user_manager import UserManager
 from core.config import settings
 from core.models import db_helper, User
 from core.schemas.user import UserCreate

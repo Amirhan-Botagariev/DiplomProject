@@ -1,8 +1,11 @@
-from .base import Base
-from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable, SQLAlchemyUserDatabase
-from core.types.user_id import UserIdType
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from core.types.user_id import UserIdType
+from libraries.fastapi_users.crud.user_crud import (
+    SQLAlchemyBaseUserTable,
+    SQLAlchemyUserDatabase,
+)
+from .base import Base
 from .mixins.id_int_pk import IdIntMixin
 
 

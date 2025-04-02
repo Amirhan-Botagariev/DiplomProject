@@ -1,15 +1,14 @@
-from fastapi_users import schemas
-
+from libraries.fastapi_users.schemas import base_user
 from core.types.user_id import UserIdType
 
 
-class UserRead(schemas.BaseUser[UserIdType]):
+class UserRead(base_user.BaseUser[UserIdType]):
     pass
 
 
-class UserCreate(schemas.BaseUserCreate):
+class UserCreate(base_user.BaseUserCreate):
     pass
 
 
-class UserUpdate(schemas.BaseUserUpdate):
+class UserUpdate(base_user.BaseUserUpdate):
     pass
