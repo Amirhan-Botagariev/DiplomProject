@@ -74,9 +74,9 @@ const Sidebar = ({
     >
       <div className="flex flex-col justify-between h-full px-4 py-6">
         <div className="flex flex-col gap-10">
-          <div className="flex justify-between items-center">
+          <div className={`flex items-center justify-${collapsed ? "center" : "between"} h-10`}>
             {!collapsed && <h1 className="text-2xl font-bold font-montserrat text-black">HRDashboard</h1>}
-            <button onClick={() => setCollapsed(!collapsed)}>
+            <button onClick={() => setCollapsed(!collapsed)} className={`${collapsed ? "" : "ml-auto"}`}>
               {collapsed ? (
                 <ArrowRightIcon className="w-4 h-4" />
               ) : (

@@ -3,20 +3,47 @@ import PasswordInput from "../components/PasswordInput";
 // @ts-ignore
 import "../styles/login.css";
 import { useToast } from "../context/ToastContext";
+import { useNavigate } from "react-router-dom";
+
+const url = import.meta.env.VITE_BACKEND_URL
 
 export default function LoginPage() {
   const [iin, setIin] = useState("");
   const [password, setPassword] = useState("");
   const { addToast } = useToast(); // используем метод из контекста
+  const navigate = useNavigate(); // <- подключаем навигацию
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (iin === "admin" && password === "admin") {
-      addToast("Добро пожаловать!", "success");
+  const handleLogin = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  try {
+    const response = await fetch(`${url}/api/v1/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        iin: iin,
+        password: password,
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      addToast("Успешный вход!", "success");
+
+      // можешь сохранить токен в localStorage, если хочешь
+      localStorage.setItem("access_token", data.access_token);
+      navigate("/dashboard");
     } else {
-      addToast("Неправильный ИИН или пароль.", "error");
+      const error = await response.json();
+      addToast(error.detail || "Ошибка авторизации", "error");
     }
-  };
+  } catch (err) {
+    console.error("Login error:", err);
+    addToast("Ошибка подключения к серверу", "error");
+  }
+};
 
   const isFilled = iin.trim() !== "" && password.trim() !== "";
 
