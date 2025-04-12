@@ -3,6 +3,7 @@ FROM node:20 AS build
 
 WORKDIR /app
 COPY ../../platform_frontend ./
+COPY ../../platform_frontend/tsconfig.json ./
 RUN npm install && npm run build
 
 # Nginx stage
