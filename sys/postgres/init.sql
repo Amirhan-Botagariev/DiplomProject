@@ -58,6 +58,7 @@ CREATE TABLE business_travel (
 ---------------------------------------------------------
 
 CREATE TABLE employees (
+                           employee_number INT UNIQUE,
                            employee_id SERIAL PRIMARY KEY,
                            age INT NOT NULL,
                            gender_id INT REFERENCES genders(gender_id) ON DELETE SET NULL,
@@ -173,7 +174,7 @@ CREATE TABLE staging_big_table (
 -- 2. Загрузка данных из CSV в staging-таблицу.
 -- Замените '/path/to/big_table.csv' на корректный путь внутри контейнера.
 COPY staging_big_table
-    FROM '/var/lib/postgresql/dump.csv'
+    FROM '/docker-entrypoint-initdb.d/dump.csv'
     DELIMITER ','
     CSV HEADER;
 
