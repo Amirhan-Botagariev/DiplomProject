@@ -25,3 +25,4 @@ orjson = "^3.10.15"
 fastapi-users = {extras = ["sqlaclhemy"], version = "^14.0.1"}
 fastapi-users-db-sqlalchemy = "^7.0.0"
 gunicorn = "^23.0.0"
+joblib = "^1.4.2"

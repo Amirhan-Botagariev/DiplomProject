@@ -747,6 +747,18 @@ files = [
 all = ["flake8 (>=7.1.1)", "mypy (>=1.11.2)", "pytest (>=8.3.2)", "ruff (>=0.6.2)"]
 
 [[package]]
+name = "joblib"
+version = "1.4.2"
+description = "Lightweight pipelining with Python functions"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "joblib-1.4.2-py3-none-any.whl", hash = "sha256:06d478d5674cbc267e7496a410ee875abd68e4340feff4490bcb7afb88060ae6"},
+    {file = "joblib-1.4.2.tar.gz", hash = "sha256:2382c5816b2636fbd20a09e0f4e9dad4736765fdfb7dca582943b9c1366b3f0e"},
+]
+
+[[package]]
 name = "makefun"
 version = "1.15.6"
 description = "Small library to dynamically create python functions."
@@ -1676,4 +1688,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "ad4af5dea31e3e841ea3c7481977cc6e2f6c996d49fcfeff19f41ad1833b4911"
+content-hash = "c20b873bc31c2953047be0bdccbe9787c4a78f196833e6e76b7f07394bdb4c8a"
