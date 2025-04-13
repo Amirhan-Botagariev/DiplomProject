@@ -219,6 +219,7 @@ WHERE BusinessTravel IS NOT NULL;
 -- 4. Заполнение основной таблицы сотрудников с подстановкой внешних ключей через JOIN
 
 INSERT INTO employees (
+    employee_number,
     age,
     gender_id,
     marital_status_id,
@@ -239,6 +240,7 @@ INSERT INTO employees (
     training_times_last_year
 )
 SELECT
+    s.EmployeeNumber,
     s.Age,
     g.gender_id,
     m.marital_status_id,
