@@ -1,0 +1,2 @@
+# Каждый день в 03:00
+0 3 * * * curl -X POST http://localhost:8000/attrition >> /var/log/attrition_cron.log 2>&1

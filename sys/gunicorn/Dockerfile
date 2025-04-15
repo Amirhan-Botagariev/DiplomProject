@@ -1,24 +1,31 @@
-# Используем официальный образ Python
 FROM python:3.12
-# Устанавливаем Poetry
+
+# Установка Poetry
 ENV POETRY_VERSION=1.8.2
 RUN curl -sSL https://install.python-poetry.org | python3 -
-
-# Добавляем Poetry в PATH
 ENV PATH="/root/.local/bin:$PATH"
 
-# Устанавливаем рабочую директорию
+# Установка cron и curl
+RUN apt-get update && apt-get install -y cron curl
+
+# Рабочая директория
 WORKDIR /platform/platform_backend
 
-# Копируем файлы с зависимостями
-COPY platform_backend/pyproject.toml platform_backend/poetry.lock ./
+# Копируем poetry-зависимости
+COPY platform_backend/pyproject.toml ./pyproject.toml
+COPY platform_backend/poetry.lock ./poetry.lock
+RUN poetry config virtualenvs.create false && poetry install --no-interaction --no-ansi
 
-# Отключаем виртуальное окружение внутри Poetry
-RUN poetry config virtualenvs.create false \
-    && poetry install --no-interaction --no-ansi
-
-# Копируем весь проект в контейнер
+# Копируем проект
 COPY . .
 
-# Команда для запуска приложения
-CMD ["poetry", "run", "python", "run_main.py"]
+# Копируем крон и стартер
+COPY sys/gunicorn/cron_job/update_prediction_cron /etc/cron.d/update_prediction_cron
+COPY sys/gunicorn/start.sh /start.sh
+
+# Разрешения
+RUN chmod 0644 /etc/cron.d/update_prediction_cron && \
+    chmod +x /start.sh
+
+# Запуск
+CMD ["/start.sh"]
