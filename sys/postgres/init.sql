@@ -113,6 +113,50 @@ CREATE TABLE performance_reviews (
                                      updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE attrition_predictions (
+    employee_number INT PRIMARY KEY,
+    predicted_attrition_prob DECIMAL(5,4),
+    predicted_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE OR REPLACE VIEW v_employees_for_attrition AS
+SELECT
+    e.employee_number,
+    g.gender_name AS "Gender",
+    m.marital_status_name AS "MaritalStatus",
+    ef.education_field_name AS "EducationField",
+    d.department_name AS "Department",
+    jr.job_role_name AS "JobRole",
+    bt.travel_type AS "BusinessTravel",
+    e.age AS "Age",
+    e.education_level AS "Education",
+    e.job_level AS "JobLevel",
+    e.num_companies_worked AS "NumCompaniesWorked",
+    e.total_working_years AS "TotalWorkingYears",
+    e.years_at_company AS "YearsAtCompany",
+    e.years_in_current_role AS "YearsInCurrentRole",
+    e.years_since_last_promotion AS "YearsSinceLastPromotion",
+    e.years_with_curr_manager AS "YearsWithCurrManager",
+    e.work_life_balance AS "WorkLifeBalance",
+    e.training_times_last_year AS "TrainingTimesLastYear",
+    s.monthly_income AS "MonthlyIncome",
+    s.hourly_rate AS "HourlyRate",
+    s.percent_salary_hike AS "PercentSalaryHike",
+    pr.performance_rating AS "PerformanceRating",
+    pr.job_involvement AS "JobInvolvement",
+    pr.job_satisfaction AS "JobSatisfaction",
+    pr.relationship_satisfaction AS "RelationshipSatisfaction",
+    pr.environment_satisfaction AS "EnvironmentSatisfaction"
+FROM employees e
+LEFT JOIN genders g ON e.gender_id = g.gender_id
+LEFT JOIN marital_statuses m ON e.marital_status_id = m.marital_status_id
+LEFT JOIN education_fields ef ON e.education_field_id = ef.education_field_id
+LEFT JOIN departments d ON e.department_id = d.department_id
+LEFT JOIN job_roles jr ON e.job_role_id = jr.job_role_id
+LEFT JOIN business_travel bt ON e.business_travel_id = bt.business_travel_id
+LEFT JOIN salaries s ON e.employee_id = s.employee_id
+LEFT JOIN performance_reviews pr ON e.employee_id = pr.employee_id;
+
 ---------------------------------------------------------
 -- Создание индексов для ускорения выборок
 ---------------------------------------------------------
@@ -133,6 +177,10 @@ CREATE INDEX idx_salaries_employee_id ON salaries(employee_id);
 -- Для таблицы performance_reviews
 CREATE INDEX idx_perf_reviews_employee_id ON performance_reviews(employee_id);
 CREATE INDEX idx_perf_reviews_review_date ON performance_reviews(review_date);
+
+-- Для таблицы attrition_predictions
+CREATE INDEX idx_attrition_predictions_predicted_at ON attrition_predictions(predicted_at);
+CREATE INDEX idx_attrition_predictions_prob ON attrition_predictions(predicted_attrition_prob);
 
 ---------------------------------------------------------
 -- ETL часть: загрузка данных из CSV в staging-таблицу и распределение по нормализованным таблицам
