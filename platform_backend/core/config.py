@@ -1,3 +1,5 @@
+import os
+from datetime import datetime
 from pathlib import Path
 from typing import Literal
 
@@ -37,11 +39,13 @@ class LoggingConfig(BaseModel):
     def log_file(self) -> str:
         return os.path.join(self.log_dir, f"{datetime.now().strftime('%d-%m-%Y')}.log")
 
+
 class ApiV1Prefix(BaseModel):
     prefix: str = "/v1"
     users: str = "/users"
     auth: str = "/auth"
     messages: str = "/messages"
+    predict: str = "/predict"
 
 
 class ApiPrefix(BaseModel):
@@ -78,9 +82,43 @@ class AccessToken(BaseModel):
     lifetime_seconds: int = 3600
 
 
+class PredictionModelConfig(BaseModel):
+    model_path: Path = Path("prediction_models/model_v1.pkl")
+    cat_cols: list[str] = [
+        "Gender",
+        "MaritalStatus",
+        "EducationField",
+        "Department",
+        "JobRole",
+        "BusinessTravel",
+    ]
+    num_cols: list[str] = [
+        "Age",
+        "Education",
+        "JobLevel",
+        "NumCompaniesWorked",
+        "TotalWorkingYears",
+        "YearsAtCompany",
+        "YearsInCurrentRole",
+        "YearsSinceLastPromotion",
+        "YearsWithCurrManager",
+        "WorkLifeBalance",
+        "TrainingTimesLastYear",
+        "MonthlyIncome",
+        "HourlyRate",
+        "PercentSalaryHike",
+        "PerformanceRating",
+        "JobInvolvement",
+        "JobSatisfaction",
+        "RelationshipSatisfaction",
+        "EnvironmentSatisfaction",
+    ]
+    prediction_query: str = "SELECT * FROM v_employees_for_attrition;"
+
+
 class UserDefaultConfig(BaseModel):
-    email: str = "admin@admin.com"
-    password: str = "abc"
+    iin: str = "111111111111"
+    password: str = "`_7X7y2S8jzp"
     is_active: bool = True
     is_superuser: bool = True
     is_verified: bool = True
@@ -100,6 +138,7 @@ class Settings(BaseSettings):
     db: DatabaseConfig
     access_token: AccessToken
     user_default: UserDefaultConfig = UserDefaultConfig()
+    prediction_model_config: PredictionModelConfig = PredictionModelConfig()
 
 
 settings = Settings()

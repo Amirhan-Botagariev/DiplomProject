@@ -5,6 +5,8 @@ from .users import router as users_router
 from .auth import router as auth_router
 from .messages import router as messages_router
 
+from .predict import router as predict_router
+
 router = APIRouter(
     prefix=settings.api.v1.prefix,
 )
@@ -24,4 +26,10 @@ router.include_router(
     messages_router,
     prefix=settings.api.v1.messages,
     tags=["Messages"],
+)
+
+router.include_router(
+    predict_router,
+    prefix=settings.api.v1.predict,
+    tags=["Predict"],
 )
