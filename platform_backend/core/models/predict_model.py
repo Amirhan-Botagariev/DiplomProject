@@ -22,7 +22,10 @@ async def predict_attrition_probabilities(session: AsyncSession) -> int:
     df = pd.DataFrame(rows, columns=list(result.keys()))
 
     # Извлекаем нужные признаки
-    feature_columns = settings.prediction_model_config.cat_cols + settings.prediction_model_config.num_cols
+    feature_columns = (
+        settings.prediction_model_config.cat_cols
+        + settings.prediction_model_config.num_cols
+    )
     X_raw = df[feature_columns]
 
     # Трансформация с обработкой ошибок

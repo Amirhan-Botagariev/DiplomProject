@@ -3,10 +3,20 @@ from datetime import datetime
 from pathlib import Path
 from typing import Literal
 
-from pydantic import BaseModel, PostgresDsn
+from pydantic import BaseModel, PostgresDsn, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+ENV_FILENAMES = [
+    ".env.common",
+    ".env.backend",
+    ".env.db",
+    ".env.pgadmin",
+    ".env.metabase",
+    ".env.frontend",
+]
+ENV_FILES = [BASE_DIR / "sys/env" / name for name in ENV_FILENAMES]
+
 LOG_DEFAULT_FORMAT = (
     "[%(asctime)s.%(msecs)03d] %(module)10s:%(lineno)-3d %(levelname)-7s - %(message)s"
 )
@@ -46,6 +56,7 @@ class ApiV1Prefix(BaseModel):
     auth: str = "/auth"
     messages: str = "/messages"
     predict: str = "/predict"
+    metabase: str = "/metabase"
 
 
 class ApiPrefix(BaseModel):
@@ -54,7 +65,7 @@ class ApiPrefix(BaseModel):
 
     @property
     def bearer_token_url(self) -> str:
-        # api/v1/auth/login
+        """Возвращает путь для token login endpoint: 'api/v1/auth/login'"""
         parts = (self.prefix, self.v1.prefix, self.v1.auth, "/login")
         path = "".join(parts)
         return path.removeprefix("/")
@@ -77,8 +88,8 @@ class DatabaseConfig(BaseModel):
 
 
 class AccessToken(BaseModel):
-    reset_password_token_secret: str
-    verification_token_secret: str
+    reset_password_token_secret: SecretStr
+    verification_token_secret: SecretStr
     lifetime_seconds: int = 3600
 
 
@@ -115,6 +126,12 @@ class PredictionModelConfig(BaseModel):
     ]
     prediction_query: str = "SELECT * FROM v_employees_for_attrition;"
 
+    @model_validator(mode="after")
+    def check_model_exists(cls, values):
+        if not values.model_path.exists():
+            raise ValueError(f"Model file not found at {values.model_path}")
+        return values
+
 
 class UserDefaultConfig(BaseModel):
     iin: str = "111111111111"
@@ -124,9 +141,22 @@ class UserDefaultConfig(BaseModel):
     is_verified: bool = True
 
 
+class MetabaseSettings(BaseModel):
+    site_url: str
+    embedding_secret_key: SecretStr
+    db_type: str
+    db_dbname: str
+    db_port: int
+    db_user: str
+    db_pass: str
+    db_host: str
+    anon_tracking_enabled: bool = False
+    embed_expiry_minutes: int = 10
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=(BASE_DIR / ".env.template", BASE_DIR / ".env"),
+        env_file=ENV_FILES,
         case_sensitive=False,
         env_nested_delimiter="__",
         env_prefix="APP_CONFIG_",
@@ -139,6 +169,7 @@ class Settings(BaseSettings):
     access_token: AccessToken
     user_default: UserDefaultConfig = UserDefaultConfig()
     prediction_model_config: PredictionModelConfig = PredictionModelConfig()
+    metabase: MetabaseSettings
 
 
 settings = Settings()

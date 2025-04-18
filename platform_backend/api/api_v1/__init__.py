@@ -6,6 +6,7 @@ from .auth import router as auth_router
 from .messages import router as messages_router
 
 from .predict import router as predict_router
+from .integration.metabase.metabase import router as metabase_router
 
 router = APIRouter(
     prefix=settings.api.v1.prefix,
@@ -32,4 +33,10 @@ router.include_router(
     predict_router,
     prefix=settings.api.v1.predict,
     tags=["Predict"],
+)
+
+router.include_router(
+    metabase_router,
+    prefix=settings.api.v1.metabase,
+    tags=['Metabase']
 )
