@@ -81,20 +81,20 @@ services:
     networks:
       - platform
 
-  frontend:
-    build:
-      context: .
-      dockerfile: sys/frontend/Dockerfile
-    container_name: frontend
-    depends_on:
-      - platform
-    env_file:
-      - sys/env/.env.frontend
-      - sys/env/.env.common
-    ports:
-      - "5173:80"
-    networks:
-      - platform
+#  frontend:
+#    build:
+#      context: .
+#      dockerfile: sys/frontend/Dockerfile
+#    container_name: frontend
+#    depends_on:
+#      - platform
+#    env_file:
+#      - sys/env/.env.frontend
+#      - sys/env/.env.common
+#    ports:
+#      - "5174:80"
+#    networks:
+#      - platform
 
   frontend-dev:
     image: node:20
@@ -103,6 +103,9 @@ services:
     volumes:
       - ./platform_frontend:/app
     command: sh -c "npm install && npm run dev -- --host"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=100
     env_file:
       - sys/env/.env.frontend
       - sys/env/.env.common
@@ -118,18 +121,10 @@ services:
     container_name: metabase
     depends_on:
       - pg
-    environment:
-      MB_EMBEDDING_SECRET_KEY: ${APP_CONFIG_METABASE__EMBEDDING_SECRET_KEY}
-      MB_DB_TYPE: ${APP_CONFIG_METABASE__DB_TYPE}
-      MB_DB_DBNAME: ${APP_CONFIG_METABASE__DB_DBNAME}
-      MB_DB_PORT: ${APP_CONFIG_METABASE__DB_PORT}
-      MB_DB_USER: ${APP_CONFIG_METABASE__DB_USER}
-      MB_DB_PASS: ${APP_CONFIG_METABASE__DB_PASS}
-      MB_DB_HOST: ${APP_CONFIG_METABASE__DB_HOST}
-      MB_ANON_TRACKING_ENABLED: ${APP_CONFIG_METABASE__ANON_TRACKING_ENABLED}
     env_file:
       - sys/env/.env.db
       - sys/env/.env.common
+      - sys/env/.env.metabase_docker
     ports:
       - "3000:3000"
     restart: unless-stopped

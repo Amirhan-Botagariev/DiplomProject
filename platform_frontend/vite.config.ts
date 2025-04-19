@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
 
 export default defineConfig(({ mode }) => {
-  // Load env file based on `mode` in the current working directory
+  // подгружаем переменные из .env для текущего mode
   const env = loadEnv(mode, process.cwd());
 
   return {
@@ -11,11 +11,18 @@ export default defineConfig(({ mode }) => {
     server: {
       host: '0.0.0.0',
       port: 5173,
+
+      // вот этот блок отвечает за polling‑watcher
+      watch: {
+        usePolling: true,   // вместо inotify
+        interval: 100       // опрашивать каждые 100 мс
+      },
+
       proxy: {
         '/backend': {
           target: env.VITE_BACKEND_URL,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ''),
+          rewrite: (path) => path, // оставляем путь без изменений
         },
       },
     },
