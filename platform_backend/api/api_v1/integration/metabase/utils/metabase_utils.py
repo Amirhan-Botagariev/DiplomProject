@@ -6,12 +6,15 @@ import jwt
 from core.config import settings
 
 
-def generate_embed_url(dashboard_id: int, params: Optional[Dict] = None) -> str:
+def generate_embed_url(
+    question_id: int,
+    params: Optional[Dict] = None,
+    expiry_minutes: int = settings.metabase.embed_expiry_minutes,
+) -> str:
     payload = {
-        "resource": {"dashboard": dashboard_id},
+        "resource": {"question": question_id},
         "params": params or {},
-        "exp": datetime.now(UTC)
-        + timedelta(minutes=settings.metabase.embed_expiry_minutes),
+        "exp": datetime.now(UTC) + timedelta(minutes=expiry_minutes),
     }
 
     token = jwt.encode(
@@ -20,5 +23,4 @@ def generate_embed_url(dashboard_id: int, params: Optional[Dict] = None) -> str:
         algorithm="HS256",
     )
 
-    iframe_url = f"{settings.metabase.site_url}/embed/dashboard/{token}#bordered=true&titled=true"
-    return iframe_url
+    return f"{settings.metabase.site_url}/embed/question/{token}#bordered=true&titled=true"
