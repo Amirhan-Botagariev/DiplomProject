@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class MaritalStatusBase(BaseModel):
-    name: str
+    marital_status_name: str
 
 
 class MaritalStatusCreate(MaritalStatusBase):
@@ -10,7 +10,7 @@ class MaritalStatusCreate(MaritalStatusBase):
 
 
 class MaritalStatus(MaritalStatusBase):
-    id: int
+    marital_status_id: int
 
     class Config:
         orm_mode = True
