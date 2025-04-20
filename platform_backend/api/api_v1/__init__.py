@@ -5,7 +5,7 @@ from .users import router as users_router
 from .auth import router as auth_router
 from .messages import router as messages_router
 
-from .predict import router as predict_router
+from api.api_v1.predict.predict import router as predict_router
 from .integration.metabase.metabase import router as metabase_router
 
 router = APIRouter(
