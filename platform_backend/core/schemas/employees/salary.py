@@ -1,15 +1,15 @@
 from pydantic import BaseModel
-from datetime import date
 
 
 class SalaryBase(BaseModel):
-    employee_id: int
-    amount: float
-    effective_date: date
+    monthly_income: float
+    hourly_rate: float
+    percent_salary_hike: int
 
 
 class SalaryRead(SalaryBase):
-    id: int
+    salary_id: int
+    employee_id: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
