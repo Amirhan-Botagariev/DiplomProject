@@ -1,7 +1,8 @@
 #!/bin/bash
+set -e
 
-# Запускаем cron
+poetry run alembic upgrade head
+
 service cron start
 
-# Запускаем FastAPI из system/run
-poetry run python system/run
+poetry run python run_main.py

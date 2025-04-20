@@ -13,6 +13,11 @@ services:
     restart: always
     networks:
       - platform
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   maildev:
     image: maildev/maildev
@@ -65,11 +70,11 @@ services:
       dockerfile: sys/gunicorn/Dockerfile
     container_name: app
     depends_on:
-      - pg
+      pg:
+        condition: service_healthy
     volumes:
-      - .:/platform
+      - ./platform_backend:/platform/platform_backend
     working_dir: /platform/platform_backend
-    command: [ "/bin/sh", "-c", "poetry run alembic -c alembic.ini upgrade head && poetry run python run_main.py" ]
     env_file:
       - sys/env/.env.backend
       - sys/env/.env.db
@@ -80,6 +85,7 @@ services:
     restart: on-failure
     networks:
       - platform
+    command: [ "/start.sh" ]
 
 #  frontend:
 #    build:

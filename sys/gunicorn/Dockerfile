@@ -16,16 +16,16 @@ COPY platform_backend/pyproject.toml ./pyproject.toml
 COPY platform_backend/poetry.lock ./poetry.lock
 RUN poetry config virtualenvs.create false && poetry install --no-interaction --no-ansi
 
-# Копируем проект
+# Копируем весь проект
 COPY . .
 
-# Копируем крон и стартер
+# Копируем cron и start.sh
 COPY sys/gunicorn/cron_job/update_prediction_cron /etc/cron.d/update_prediction_cron
 COPY sys/gunicorn/start.sh /start.sh
 
-# Разрешения
+# Права на файлы
 RUN chmod 0644 /etc/cron.d/update_prediction_cron && \
     chmod +x /start.sh
 
-# Запуск
+# Старт контейнера
 CMD ["/start.sh"]
