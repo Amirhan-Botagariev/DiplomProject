@@ -6,9 +6,7 @@ from core.models.base import Base
 class BusinessTravel(Base):
     __tablename__ = "business_travel"
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, nullable=False)
+    business_travel_id = Column(Integer, primary_key=True, index=True)
+    travel_type = Column(String(50), nullable=False, unique=True)
 
-    employees = relationship(
-        "Employee", back_populates="business_travel", lazy="joined"
-    )
+    employees = relationship("Employee", back_populates="business_travel", lazy="joined")
