@@ -1,17 +1,19 @@
 from pydantic import BaseModel
 from datetime import date
-from typing import Optional
 
 
 class PerformanceReviewBase(BaseModel):
-    employee_id: int
-    review_date: date
-    score: float
-    reviewer: Optional[str]
+    performance_rating: int
+    job_involvement: int
+    job_satisfaction: int
+    relationship_satisfaction: int
+    environment_satisfaction: int
 
 
 class PerformanceReviewRead(PerformanceReviewBase):
-    id: int
+    review_id: int
+    employee_id: int
+    review_date: date
 
     class Config:
-        from_attributes = True
+        orm_mode = True
