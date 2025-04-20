@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   DashboardIcon,
   ReportsIcon,
@@ -11,6 +12,14 @@ import {
   ArrowDownIcon,
 } from "../icons";
 
+interface MenuItem {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+  route?: string;
+  children?: MenuItem[];
+}
+
 const Sidebar = ({
   collapsed,
   setCollapsed,
@@ -18,26 +27,38 @@ const Sidebar = ({
   collapsed: boolean;
   setCollapsed: (v: boolean) => void;
 }) => {
-  const [active, setActive] = useState("dashboard");
+  const location = useLocation();
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
 
   const toggleOpen = (id: string) => {
     setOpenItems((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     {
       id: "dashboard",
       label: "Дэшборд",
       icon: <DashboardIcon />,
+      route: "/dashboard",
     },
     {
       id: "reports",
-      label: "Отчеты",
+      label: "Отчёты",
       icon: <ReportsIcon />,
       children: [
-        { id: "monthly", label: "Месячные отчеты" },
-        { id: "annual", label: "Годовые отчеты" },
+        { id: "demo-age", label: "Возрастной профиль", icon: <></>, route: "/reports/demo-age" },
+        { id: "demo-gender", label: "Пол и семейное положение", icon: <></>, route: "/reports/demo-gender" },
+        { id: "demo-education", label: "Образование", icon: <></>, route: "/reports/demo-education" },
+        { id: "org-department", label: "По отделам", icon: <></>, route: "/reports/org-department" },
+        { id: "org-role", label: "По ролям и уровням", icon: <></>, route: "/reports/org-role" },
+        { id: "tenure-company", label: "Стаж в компании", icon: <></>, route: "/reports/tenure-company" },
+        { id: "tenure-role", label: "Стаж в текущей роли / с менеджером", icon: <></>, route: "/reports/tenure-role" },
+        { id: "retention-dept", label: "Текучка по отделам", icon: <></>, route: "/reports/retention-dept" },
+        { id: "retention-risk", label: "Риск ухода (вероятность)", icon: <></>, route: "/reports/retention-risk" },
+        { id: "travel", label: "Командировки", icon: <></>, route: "/reports/travel" },
+        { id: "work-life", label: "Баланс работа‑жизнь", icon: <></>, route: "/reports/work-life" },
+        { id: "training-year", label: "Тренинги за год", icon: <></>, route: "/reports/training-year" },
+        { id: "training-vs-attrition", label: "Тренинги vs текучка", icon: <></>, route: "/reports/training-vs-attrition" },
       ],
     },
     {
@@ -45,25 +66,27 @@ const Sidebar = ({
       label: "Сотрудники",
       icon: <UsersIcon />,
       children: [
-        { id: "list", label: "Список сотрудников" },
-        { id: "positions", label: "Должности" },
+        { id: "list", label: "Список сотрудников", icon: <></>, route: "/employees/list" },
+        { id: "positions", label: "Должности", icon: <></>, route: "/employees/positions" },
       ],
     },
     {
       id: "orders",
       label: "Приказы",
       icon: <OrdersIcon />,
+      route: "/orders"
     },
     {
       id: "departments",
       label: "Подразделения",
       icon: <DepartmentsIcon />,
+      route: "/departments"
     },
   ];
 
   const bottomItems = [
-    { id: "help", label: "Помощь", icon: <HelpIcon /> },
-    { id: "settings", label: "Настройки", icon: <SettingsIcon /> },
+    { id: "help", label: "Помощь", icon: <HelpIcon />, route: "/help" },
+    { id: "settings", label: "Настройки", icon: <SettingsIcon />, route: "/settings" },
   ];
 
   return (
@@ -77,57 +100,67 @@ const Sidebar = ({
           <div className={`flex items-center justify-${collapsed ? "center" : "between"} h-10`}>
             {!collapsed && <h1 className="text-2xl font-bold font-montserrat text-black">HRDashboard</h1>}
             <button onClick={() => setCollapsed(!collapsed)} className={`${collapsed ? "" : "ml-auto"}`}>
-              {collapsed ? (
-                <ArrowRightIcon className="w-4 h-4" />
-              ) : (
-                <ArrowRightIcon className="w-4 h-4 rotate-180" />
-              )}
+              <ArrowRightIcon className={`w-4 h-4 ${collapsed ? "" : "rotate-180"}`} />
             </button>
           </div>
 
           <nav className="flex flex-col gap-2">
-            {menuItems.map(({ id, label, icon, children }) => {
-              const isActive = active === id;
+            {menuItems.map(({ id, label, icon, route, children }) => {
+              const isActive = location.pathname.startsWith(route || `/${id}`);
               const isOpen = openItems[id];
 
               return (
                 <div key={id}>
-                  <button
-                    onClick={() => setActive(id)}
-                    className={`flex items-center justify-between px-3 py-3 rounded-lg text-sm font-semibold transition w-full ${
-                      isActive ? "bg-[#5FB3F6] text-white" : "hover:bg-gray-100 text-black"
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={`w-5 h-5 ${isActive ? "text-white" : "text-black"}`}>{icon}</div>
-                      {!collapsed && label}
-                    </div>
-                    {!collapsed && children && (
-                      <button onClick={() => toggleOpen(id)} type="button">
+                  {route ? (
+                    <Link
+                      to={route}
+                      className={`flex items-center justify-${collapsed ? "center" : "between"} px-3 py-3 rounded-lg text-sm font-semibold transition w-full ${
+                        isActive ? "bg-[#5FB3F6] text-white" : "hover:bg-gray-100 text-black"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`w-5 h-5 ${isActive ? "text-white" : "text-black"}`}>{icon}</div>
+                        {!collapsed && label}
+                      </div>
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={() => toggleOpen(id)}
+                      className={`flex items-center justify-between px-3 py-3 rounded-lg text-sm font-semibold transition w-full ${
+                        isOpen ? "bg-[#5FB3F6] text-white" : "hover:bg-gray-100 text-black"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`w-5 h-5 ${isOpen ? "text-white" : "text-black"}`}>{icon}</div>
+                        {!collapsed && label}
+                      </div>
+                      {!collapsed && children && (
                         <ArrowDownIcon
                           className={`w-3 h-3 transition-transform ${
                             isOpen ? "rotate-180" : ""
-                          } ${isActive ? "text-white" : "text-black"}`}
+                          } ${isOpen ? "text-white" : "text-black"}`}
                         />
-                      </button>
-                    )}
-                  </button>
+                      )}
+                    </button>
+                  )}
 
                   {!collapsed && isOpen && children && (
-                    <div className="ml-10 mt-1 flex flex-col gap-1">
-                      {children.map((child) => (
-                        <button
-                          key={child.id}
-                          onClick={() => setActive(child.id)}
-                          className={`text-left text-sm px-2 py-1 rounded-md ${
-                            active === child.id
-                              ? "bg-[#5FB3F6] text-white"
-                              : "hover:bg-gray-100 text-black"
-                          }`}
-                        >
-                          {child.label}
-                        </button>
-                      ))}
+                    <div className="ml-8 mt-1 flex flex-col gap-1">
+                      {children.map((child) => {
+                        const childActive = location.pathname === child.route;
+                        return (
+                          <Link
+                            key={child.id}
+                            to={child.route!}
+                            className={`flex items-center gap-3 text-sm px-2 py-1 rounded-md ${
+                              childActive ? "bg-[#5FB3F6] text-white" : "hover:bg-gray-100 text-black"
+                            }`}
+                          >
+                            {child.icon}
+                            {child.label}
+                          </Link>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -156,18 +189,21 @@ const Sidebar = ({
 
           {!collapsed && openItems["extra"] && (
             <div className="ml-8 flex flex-col gap-2">
-              {bottomItems.map(({ id, label, icon }) => (
-                <button
-                  key={id}
-                  onClick={() => setActive(id)}
-                  className={`flex items-center gap-3 text-black hover:bg-gray-100 rounded-lg px-3 py-2 text-sm ${
-                    active === id ? "bg-[#5FB3F6] text-white" : ""
-                  }`}
-                >
-                  <div className="w-5 h-5">{icon}</div>
-                  {label}
-                </button>
-              ))}
+              {bottomItems.map(({ id, label, icon, route }) => {
+                const bottomActive = location.pathname === route;
+                return (
+                  <Link
+                    key={id}
+                    to={route!}
+                    className={`flex items-center gap-3 text-sm px-3 py-2 rounded-lg transition w-full ${
+                      bottomActive ? "bg-[#5FB3F6] text-white" : "hover:bg-gray-100 text-black"
+                    }`}
+                  >
+                    <div className="w-5 h-5">{icon}</div>
+                    {!collapsed && label}
+                  </Link>
+                );
+              })}
             </div>
           )}
         </div>

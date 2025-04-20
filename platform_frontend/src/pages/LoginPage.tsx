@@ -1,6 +1,5 @@
 import { useState } from "react";
 import PasswordInput from "../components/PasswordInput";
-// @ts-ignore
 import "../styles/login.css";
 import { useToast } from "../context/ToastContext";
 import { useNavigate } from "react-router-dom";
@@ -10,8 +9,8 @@ const url = import.meta.env.VITE_BACKEND_URL
 export default function LoginPage() {
   const [iin, setIin] = useState("");
   const [password, setPassword] = useState("");
-  const { addToast } = useToast(); // используем метод из контекста
-  const navigate = useNavigate(); // <- подключаем навигацию
+  const { addToast } = useToast();
+  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
   e.preventDefault();
