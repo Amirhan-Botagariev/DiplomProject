@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class GenderBase(BaseModel):
-    name: str
+    gender_name: str
 
 
 class GenderCreate(GenderBase):
@@ -10,7 +10,7 @@ class GenderCreate(GenderBase):
 
 
 class Gender(GenderBase):
-    id: int
+    gender_id: int
 
     class Config:
         orm_mode = True
