@@ -2,11 +2,11 @@ from pydantic import BaseModel
 
 
 class BusinessTravelBase(BaseModel):
-    name: str
+    travel_type: str
 
 
 class BusinessTravelRead(BusinessTravelBase):
-    id: int
+    business_travel_id: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
