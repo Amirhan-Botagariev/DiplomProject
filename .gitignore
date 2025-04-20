@@ -24,7 +24,7 @@ platform_backend_backend/.env
 +!sys/env/.env.backend.template
 +!sys/env/.env.common.template
 +!sys/env/.env.db.template
-+!sys/env/.env.frontend..template
++!sys/env/.env.frontend.template
 +!sys/env/.env.metabase.template
 +!sys/env/.env.metabase_docker.template
 +!sys/env/.env.pgadmin.template
