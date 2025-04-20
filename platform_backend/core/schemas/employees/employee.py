@@ -1,19 +1,20 @@
 # schemas/employee.py
 from pydantic import BaseModel
 from typing import Optional
-from datetime import datetime
 
 
 class EmployeeBase(BaseModel):
-    gender_id: int
-    marital_status_id: int
+    employee_number: int
+    age: int
+    gender_id: Optional[int] = None
+    marital_status_id: Optional[int] = None
     education_level: int
-    education_field_id: int
-    department_id: int
-    job_role_id: int
+    education_field_id: Optional[int] = None
+    department_id: Optional[int] = None
+    job_role_id: Optional[int] = None
     job_level: int
     attrition: bool
-    business_travel_id: int
+    business_travel_id: Optional[int] = None
     num_companies_worked: int
     total_working_years: int
     years_at_company: int
@@ -24,14 +25,8 @@ class EmployeeBase(BaseModel):
     training_times_last_year: int
 
 
-class EmployeeCreate(EmployeeBase):
-    pass
-
-
 class EmployeeRead(EmployeeBase):
     employee_id: int
-    created_at: Optional[datetime]
-    updated_at: Optional[datetime]
 
     class Config:
         orm_mode = True
