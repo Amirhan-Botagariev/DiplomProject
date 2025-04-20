@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class EducationFieldBase(BaseModel):
-    name: str
+    education_field_name: str
 
 
 class EducationFieldCreate(EducationFieldBase):
@@ -10,7 +10,7 @@ class EducationFieldCreate(EducationFieldBase):
 
 
 class EducationField(EducationFieldBase):
-    id: int
+    education_field_id: int
 
     class Config:
         orm_mode = True
