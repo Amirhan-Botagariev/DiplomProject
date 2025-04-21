@@ -153,6 +153,8 @@ class MetabaseSettings(BaseModel):
     anon_tracking_enabled: bool = False
     embed_expiry_minutes: int = 10
 
+class ScriptConfig(BaseModel):
+    path_to_file: str = "system/load_data_script/data/init.sql"
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
@@ -170,6 +172,7 @@ class Settings(BaseSettings):
     user_default: UserDefaultConfig = UserDefaultConfig()
     prediction_model_config: PredictionModelConfig = PredictionModelConfig()
     metabase: MetabaseSettings
+    script_config: ScriptConfig = ScriptConfig()
 
 
 settings = Settings()

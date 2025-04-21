@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 import logging
 
@@ -43,6 +44,7 @@ class DatabaseHelper:
         logger.info("Disposing database engine.")
         await self.engine.dispose()
 
+    @asynccontextmanager
     async def session_getter(self) -> AsyncGenerator[AsyncSession, None]:
         logger.info("Creating new async session.")
         async with self.session_factory() as session:
