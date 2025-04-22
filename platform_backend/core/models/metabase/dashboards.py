@@ -1,13 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, ARRAY, JSON, Enum
+
 from ..base import Base
-
-import enum
-
-
-class AccessGroupRole(enum.Enum):
-    admin = "admin"
-    analyst = "analyst"
-    hr = "hr"
+from ..shared.user_role_enum import UserRole as AccessGroupRole
 
 
 class Dashboard(Base):
