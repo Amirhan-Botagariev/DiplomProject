@@ -12,6 +12,7 @@ _all_ = (
     "EducationField",
     "Salary",
     "PerformanceReview",
+    "Dashboard",
 )
 
 from .db_helper import db_helper
@@ -29,3 +30,5 @@ from .employees.marital_status import MaritalStatus
 from .employees.education_field import EducationField
 from .employees.salary import Salary
 from .employees.performance_review import PerformanceReview
+
+from .metabase.dashboards import Dashboard
