@@ -1,6 +1,6 @@
 import logging
 import os
-from logging.handlers import RotatingFileHandler
+from logging.handlers import TimedRotatingFileHandler
 
 from starlette.middleware.cors import CORSMiddleware
 
@@ -19,12 +19,14 @@ def setup_logging():
     handlers = []
     
     if settings.logging.file_logging:
-        file_handler = RotatingFileHandler(
+        file_handler = TimedRotatingFileHandler(
             settings.logging.log_file,
-            maxBytes=settings.logging.max_file_size_mb * 1024 * 1024,
+            when="midnight",
+            interval=1,
             backupCount=settings.logging.backup_count
         )
         file_handler.setFormatter(formatter)
+        file_handler.suffix = "%Y-%m-%d"
         handlers.append(file_handler)
 
     logging.basicConfig(
