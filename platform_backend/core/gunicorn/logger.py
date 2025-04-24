@@ -1,5 +1,5 @@
-from logging import Formatter
-from logging.handlers import RotatingFileHandler
+from logging import Formatter, Logger
+from logging.handlers import TimedRotatingFileHandler
 import os
 
 from fastapi import FastAPI
@@ -20,20 +20,24 @@ class GunicornLogger(Logger):
         )
 
         if settings.logging.file_logging:
-            access_handler = RotatingFileHandler(
+            access_handler = TimedRotatingFileHandler(
                 settings.logging.access_log_file,
-                maxBytes=settings.logging.max_file_size_mb * 1024 * 1024,
+                when="midnight",
+                interval=1,
                 backupCount=settings.logging.backup_count,
             )
             access_handler.setFormatter(formatter)
+            access_handler.suffix = "%Y-%m-%d"
             self.access_log.addHandler(access_handler)
 
-            error_handler = RotatingFileHandler(
+            error_handler = TimedRotatingFileHandler(
                 settings.logging.error_log_file,
-                maxBytes=settings.logging.max_file_size_mb * 1024 * 1024,
+                when="midnight",
+                interval=1,
                 backupCount=settings.logging.backup_count,
             )
             error_handler.setFormatter(formatter)
+            error_handler.suffix = "%Y-%m-%d"
             self.error_log.addHandler(error_handler)
 
         self.error_log.setLevel(settings.logging.log_level.upper())
