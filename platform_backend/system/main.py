@@ -46,6 +46,15 @@ main_app = create_app(
     create_custom_static_urls=False,
 )
 
+@main_app.get("/test-logging")
+async def test_logging():
+    logger = logging.getLogger(__name__)
+    logger.debug("This is a debug message")
+    logger.info("This is an info message")
+    logger.warning("This is a warning message")
+    logger.error("This is an error message")
+    return {"message": "Logging test completed"}
+
 main_app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],  # URL фронта
