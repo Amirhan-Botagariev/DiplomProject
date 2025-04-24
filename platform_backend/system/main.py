@@ -26,11 +26,6 @@ def setup_logging():
         )
         file_handler.setFormatter(formatter)
         handlers.append(file_handler)
-    
-    if settings.logging.console_logging:
-        console_handler = logging.StreamHandler()
-        console_handler.setFormatter(formatter)
-        handlers.append(console_handler)
 
     logging.basicConfig(
         level=settings.logging.log_level.upper(),
