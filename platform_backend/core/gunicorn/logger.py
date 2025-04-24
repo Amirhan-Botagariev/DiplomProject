@@ -1,11 +1,12 @@
-from logging import Logger, Formatter
+from logging import Formatter
 from logging.handlers import TimedRotatingFileHandler
 import os
 from datetime import datetime
 
+from gunicorn.glogging import Logger as GunicornBaseLogger
 from core.config import settings
 
-class GunicornLogger(Logger):
+class GunicornLogger(GunicornBaseLogger):
     def setup(self, cfg) -> None:
         super().setup(cfg)
 
