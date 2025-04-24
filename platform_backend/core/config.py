@@ -44,10 +44,33 @@ class LoggingConfig(BaseModel):
     ] = "info"
     log_format: str = LOG_DEFAULT_FORMAT
     log_dir: str = "tmp/log"
+    max_file_size_mb: int = 100
+    backup_count: int = 30
+    date_format: str = "%Y-%m-%d %H:%M:%S"
+    console_logging: bool = True
+    file_logging: bool = True
 
     @property
     def log_file(self) -> str:
         return os.path.join(self.log_dir, f"{datetime.now().strftime('%d-%m-%Y')}.log")
+
+    @property
+    def access_log_file(self) -> str:
+        return os.path.join(self.log_dir, f"access-{datetime.now().strftime('%d-%m-%Y')}.log")
+
+    @property
+    def error_log_file(self) -> str:
+        return os.path.join(self.log_dir, f"error-{datetime.now().strftime('%d-%m-%Y')}.log")
+
+    @model_validator(mode='after')
+    def validate_logging_config(cls, values):
+        if values.max_file_size_mb <= 0:
+            raise ValueError("max_file_size_mb must be positive")
+        if values.backup_count < 0:
+            raise ValueError("backup_count must be non-negative")
+        if not values.console_logging and not values.file_logging:
+            raise ValueError("At least one of console_logging or file_logging must be enabled")
+        return values
 
 
 class ApiV1Prefix(BaseModel):
