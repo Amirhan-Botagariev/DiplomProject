@@ -46,12 +46,11 @@ class LoggingConfig(BaseModel):
     log_dir: str = "tmp/log"
     date_format: str = "%Y-%m-%d %H:%M:%S"
     file_logging: bool = True
-    max_file_size_mb: int = 100
-    backup_count: int = 30
+    backup_count: int = 365  # Store one year of logs
 
     @property
     def log_file(self) -> str:
-        return os.path.join(self.log_dir, f"{datetime.now().strftime('%d-%m-%Y')}.log")
+        return os.path.join(self.log_dir, "app.log")
 
     @property
     def access_log_file(self) -> str:
@@ -65,8 +64,6 @@ class LoggingConfig(BaseModel):
     def validate_logging_settings(self) -> "LoggingConfig":
         if not self.file_logging:
             raise ValueError("File logging must be enabled")
-        if self.max_file_size_mb <= 0:
-            raise ValueError("max_file_size_mb must be positive")
         if self.backup_count < 0:
             raise ValueError("backup_count must be non-negative")
         return self
