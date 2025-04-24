@@ -1,6 +1,7 @@
 import logging
 import os
 from logging.handlers import TimedRotatingFileHandler
+from datetime import datetime
 
 from starlette.middleware.cors import CORSMiddleware
 
@@ -21,12 +22,13 @@ def setup_logging():
     if settings.logging.file_logging:
         file_handler = TimedRotatingFileHandler(
             settings.logging.log_file,
-            when="midnight",
+            when='midnight',
             interval=1,
-            backupCount=settings.logging.backup_count
+            backupCount=settings.logging.backup_count,
+            encoding='utf-8'
         )
         file_handler.setFormatter(formatter)
-        file_handler.suffix = "%Y-%m-%d"
+        file_handler.namer = lambda name: name.replace(".log.", f".{datetime.now().strftime('%Y-%m-%d')}.")
         handlers.append(file_handler)
 
     logging.basicConfig(
@@ -46,10 +48,12 @@ main_app = create_app(
 @main_app.get("/test-logging")
 async def test_logging():
     logger = logging.getLogger(__name__)
+    
     logger.debug("This is a debug message")
     logger.info("This is an info message")
     logger.warning("This is a warning message")
     logger.error("This is an error message")
+    
     return {"message": "Logging test completed"}
 
 main_app.add_middleware(

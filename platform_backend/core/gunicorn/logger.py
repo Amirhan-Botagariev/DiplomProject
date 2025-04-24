@@ -1,12 +1,9 @@
-from logging import Formatter, Logger
+from logging import Logger, Formatter
 from logging.handlers import TimedRotatingFileHandler
 import os
-
-from fastapi import FastAPI
-from gunicorn.glogging import Logger
+from datetime import datetime
 
 from core.config import settings
-
 
 class GunicornLogger(Logger):
     def setup(self, cfg) -> None:
@@ -20,24 +17,28 @@ class GunicornLogger(Logger):
         )
 
         if settings.logging.file_logging:
+            # Access log handler
             access_handler = TimedRotatingFileHandler(
                 settings.logging.access_log_file,
-                when="midnight",
+                when='midnight',
                 interval=1,
                 backupCount=settings.logging.backup_count,
+                encoding='utf-8'
             )
             access_handler.setFormatter(formatter)
-            access_handler.suffix = "%Y-%m-%d"
+            access_handler.namer = lambda name: name.replace(".log.", f".{datetime.now().strftime('%Y-%m-%d')}.")
             self.access_log.addHandler(access_handler)
 
+            # Error log handler
             error_handler = TimedRotatingFileHandler(
                 settings.logging.error_log_file,
-                when="midnight",
+                when='midnight',
                 interval=1,
                 backupCount=settings.logging.backup_count,
+                encoding='utf-8'
             )
             error_handler.setFormatter(formatter)
-            error_handler.suffix = "%Y-%m-%d"
+            error_handler.namer = lambda name: name.replace(".log.", f".{datetime.now().strftime('%Y-%m-%d')}.")
             self.error_log.addHandler(error_handler)
 
         self.error_log.setLevel(settings.logging.log_level.upper())
