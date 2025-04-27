@@ -29,6 +29,7 @@ pandas = "^2.2.3"
 scikit-learn = "^1.6.1"
 pyjwt = "^2.10.1"
 sqlparse = "^0.5.3"
+requests = "^2.32.3"
 
 [tool.black]
 line-length = 88

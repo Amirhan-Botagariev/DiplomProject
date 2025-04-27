@@ -11,14 +11,14 @@ class Dashboard(BaseModel):
     dashboard_name: str
     creator_id: Optional[int]
     creator_name: Optional[str]
-    our_user_id: Optional[int]
+    # our_user_id: Optional[int]
     created_at: Optional[datetime]
     updated_at: Optional[datetime]
-    access_user_ids: Optional[List[int]]
-    access_groups: Optional[List[AccessGroupRole]]
+    # access_user_ids: Optional[List[int]]
+    # access_groups: Optional[List[AccessGroupRole]]
     dashboard_url: Optional[str]
     category: Optional[str]
     tags: Optional[dict]
 
     class Config:
-        orm_mode = True
+        from_attributes = True

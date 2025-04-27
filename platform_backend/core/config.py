@@ -1,5 +1,4 @@
 import os
-from datetime import datetime
 from pathlib import Path
 from typing import Literal
 
@@ -171,9 +170,13 @@ class MetabaseSettings(BaseModel):
     db_host: str
     anon_tracking_enabled: bool = False
     embed_expiry_minutes: int = 10
+    username: str = "admin@admin.com"
+    password: SecretStr = "Qwerty123456!"
+
 
 class ScriptConfig(BaseModel):
     path_to_file: str = "system/load_data_script/data/init.sql"
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(

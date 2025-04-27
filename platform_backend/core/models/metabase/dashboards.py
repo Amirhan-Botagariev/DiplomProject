@@ -1,7 +1,6 @@
-from sqlalchemy import Column, Integer, String, DateTime, ARRAY, JSON, Enum
+from sqlalchemy import Column, Integer, String, DateTime, JSON
 
 from ..base import Base
-from ..shared.user_role_enum import UserRole as AccessGroupRole
 
 
 class Dashboard(Base):
@@ -15,8 +14,7 @@ class Dashboard(Base):
     creator_name = Column(String)
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
-    access_user_ids = Column(ARRAY(Integer), index=True)
-    access_groups = Column(ARRAY(Enum(AccessGroupRole)), index=True)
-
+    # access_user_ids = Column(ARRAY(Integer), index=True, nullable=True)
+    # access_groups = Column(ARRAY(ENUM(AccessGroupRole)), index=True, nullable=True) #TODO: Добавить права доступа
     category = Column(String(100), nullable=True, index=True)
     tags = Column(JSON, nullable=True)

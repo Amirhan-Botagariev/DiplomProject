@@ -1,12 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "../../components/ui/card.tsx";
 import ReportCreationModal from "../../features/ReportModal/ReportModal";
+import { useNavigate, useParams } from 'react-router-dom';
+
+interface Dashboard {
+  dashboard_id: number;
+  dashboard_name: string;
+  dashboard_url: string;
+  category?: string;
+}
 
 export default function ReportSelector({ title = "Отчёты" }) {
+  const navigate = useNavigate();
+  const { type } = useParams();
   const [isModalOpen, setModalOpen] = useState(false);
+  const [dashboards, setDashboards] = useState<Dashboard[] | null>(null);
 
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+  useEffect(() => {
+    async function fetchDashboards() {
+      try {
+        const response = await fetch(`${backendUrl}/api/v1/metabase/dashboards`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch dashboards");
+        }
+        const data = await response.json();
+        setDashboards(data);
+      } catch (error) {
+        console.error(error);
+        setDashboards([]);
+      }
+    }
+    fetchDashboards();
+  }, [backendUrl]);
+
+  if (dashboards === null) {
+    return <div className="flex flex-col min-h-screen bg-white p-6">Загрузка...</div>;
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
@@ -29,41 +62,24 @@ export default function ReportSelector({ title = "Отчёты" }) {
 
         {/* Report Grid */}
         <div className="grid grid-cols-2 gap-6">
-          <Card className="cursor-pointer hover:shadow-md transition">
-            <CardContent className="p-4">
-              <h2 className="text-lg font-semibold mb-1">Возрастной профиль</h2>
-              <p className="text-sm text-muted-foreground">
-                Распределение сотрудников по возрасту, группам и категориям
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="cursor-pointer hover:shadow-md transition">
-            <CardContent className="p-4">
-              <h2 className="text-lg font-semibold mb-1">Пол и семейное положение</h2>
-              <p className="text-sm text-muted-foreground">
-                Анализ гендерного состава и семейного статуса сотрудников
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="cursor-pointer hover:shadow-md transition">
-            <CardContent className="p-4">
-              <h2 className="text-lg font-semibold mb-1">Образование</h2>
-              <p className="text-sm text-muted-foreground">
-                Образовательный уровень персонала
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="cursor-pointer hover:shadow-md transition">
-            <CardContent className="p-4">
-              <h2 className="text-lg font-semibold mb-1">Стаж в компании</h2>
-              <p className="text-sm text-muted-foreground">
-                Продолжительность работы сотрудников в компании
-              </p>
-            </CardContent>
-          </Card>
+          {Array.isArray(dashboards) && dashboards.length > 0 ? (
+            dashboards.map((dashboard) => (
+              <Card
+                key={dashboard.dashboard_id}
+                className="cursor-pointer hover:shadow-md transition"
+                onClick={() => navigate(`/reports/${type}/${dashboard.dashboard_id}`)}
+              >
+                <CardContent className="p-4">
+                  <h2 className="text-lg font-semibold mb-1">{dashboard.dashboard_name}</h2>
+                  <p className="text-sm text-muted-foreground">
+                    {dashboard.category || "Описание отсутствует"}
+                  </p>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <p>Нет доступных отчётов</p>
+          )}
         </div>
       </div>
 
