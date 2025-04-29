@@ -7,6 +7,6 @@ router = APIRouter()
 
 
 @router.post("/attrition")
-async def predict_attrition(session: AsyncSession = Depends(db_helper.session_getter)):
-    updated_count = await predict_attrition_probabilities(session)
+async def predict_attrition():
+    updated_count = await predict_attrition_probabilities()
     return {"status": "ok", "updated": updated_count}

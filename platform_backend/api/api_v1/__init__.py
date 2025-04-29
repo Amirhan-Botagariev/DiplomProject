@@ -7,6 +7,8 @@ from .messages import router as messages_router
 
 from api.api_v1.predict.predict import router as predict_router
 from .integration.metabase.metabase import router as metabase_router
+from .visualizations.sources import router as visualization_router
+from .visualizations.query import router as query_router
 
 router = APIRouter(
     prefix=settings.api.v1.prefix,
@@ -38,5 +40,17 @@ router.include_router(
 router.include_router(
     metabase_router,
     prefix=settings.api.v1.metabase,
-    tags=['Metabase']
+    tags=["Metabase"],
+)
+
+router.include_router(
+    visualization_router,
+    prefix=settings.api.v1.predefined_sources,
+    tags=["Sources"],
+)
+
+router.include_router(
+    query_router,
+    prefix=settings.api.v1.query,
+    tags=["Query"],
 )

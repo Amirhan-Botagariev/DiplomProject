@@ -13,6 +13,10 @@ _all_ = (
     "Salary",
     "PerformanceReview",
     "Dashboard",
+    "QueryCache",
+    "QueryHistory",
+    "PredefinedSource",
+    "DashboardConfiguration",
 )
 
 from .db_helper import db_helper
@@ -32,3 +36,8 @@ from .employees.salary import Salary
 from .employees.performance_review import PerformanceReview
 
 from .metabase.dashboards import Dashboard
+
+from .visualizations.query_cache import QueryCache
+from .visualizations.query_history import QueryHistory
+from .visualizations.predefined_source import PredefinedSource
+from .visualizations.dashboard_configurations import DashboardConfiguration
