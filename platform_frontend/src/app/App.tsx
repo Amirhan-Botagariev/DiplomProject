@@ -6,7 +6,13 @@ import Header from "../layout/Header.tsx";
 import Dashboard from "../pages/Dashboard.tsx";
 import ReportSelector from "../pages/reports/ReportSelector.tsx"; // правильный импорт
 import DashboardPage from "../pages/reports/DashboardPage.tsx";    // добавить
-// … другие импорты
+import DemoAgeReportPage from "../pages/DemoAgeReportPage"; // добавить
+import DemoGenderReportPage from "../pages/DemoGenderReportPage"; // добавить
+import DemoEducationReportPage from "../pages/DemoEducationReportPage"; // добавить
+import NotificationsPage from "../pages/NotificationsPage.tsx";
+import RiskCategoryPage from "../pages/RiskCategoryPage.tsx";
+import EmployeesListPage from "../pages/EmployeesListPage";
+import JobRolesPage from "../pages/JobRolesPage";
 
 export default function App() {
   const [collapsed, setCollapsed] = useState(false);
@@ -22,7 +28,13 @@ export default function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/reports/:type" element={<ReportSelector />} /> {/* Страница выбора отчетов по типу */}
               <Route path="/reports/:type/:id" element={<DashboardPage />} /> {/* Страница отдельного отчета */}
-              {/* другие маршруты */}
+              <Route path="/reports/demo-age" element={<DemoAgeReportPage />} />
+              <Route path="/reports/demo-gender" element={<DemoGenderReportPage />} />
+              <Route path="/reports/demo-education" element={<DemoEducationReportPage />} />
+              <Route path="/notifications" element={<NotificationsPage />} />
+              <Route path="/notifications/:category" element={<RiskCategoryPage />} />
+              <Route path="/employees/list" element={<EmployeesListPage />} />
+              <Route path="/employees/positions" element={<JobRolesPage />} />
             </Routes>
         </div>
       </div>

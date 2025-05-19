@@ -4,7 +4,7 @@ from core.config import settings
 from .users import router as users_router
 from .auth import router as auth_router
 from .messages import router as messages_router
-
+from .employees import employees_router, employees_notifications_router
 from api.api_v1.predict.predict import router as predict_router
 from .integration.metabase.metabase import router as metabase_router
 from .visualizations.sources import router as visualization_router
@@ -29,6 +29,18 @@ router.include_router(
     messages_router,
     prefix=settings.api.v1.messages,
     tags=["Messages"],
+)
+
+router.include_router(
+    employees_router,
+    prefix=settings.api.v1.employees,
+    tags=["Employees"],
+)
+
+router.include_router(
+    employees_notifications_router,
+    prefix=settings.api.v1.employees,
+    tags=["Employees", "Notifications"],
 )
 
 router.include_router(

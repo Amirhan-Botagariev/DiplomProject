@@ -10,6 +10,7 @@ import {
   SettingsIcon,
   ArrowRightIcon,
   ArrowDownIcon,
+  NotificationIcon
 } from "../icons";
 
 interface MenuItem {
@@ -81,6 +82,12 @@ const Sidebar = ({
       label: "Подразделения",
       icon: <DepartmentsIcon />,
       route: "/departments"
+    },
+    {
+      id: "notifications",
+      label: "Уведомления",
+      icon: <NotificationIcon />,
+      route: "/notifications"
     },
   ];
 
@@ -186,6 +193,7 @@ const Sidebar = ({
               />
             )}
           </button>
+
 
           {!collapsed && openItems["extra"] && (
             <div className="ml-8 flex flex-col gap-2">

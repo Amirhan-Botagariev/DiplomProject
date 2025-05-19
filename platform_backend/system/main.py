@@ -56,13 +56,14 @@ async def test_logging():
     
     return {"message": "Logging test completed"}
 
-main_app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # URL фронта
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Удаляем второй CORSMiddleware, чтобы не было конфликтов и дублирования
+# main_app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=["http://localhost:5173"],  # URL фронта
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
 
 main_app.include_router(
     api_router,

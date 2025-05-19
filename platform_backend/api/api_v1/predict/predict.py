@@ -5,7 +5,6 @@ from core.models.db_helper import db_helper
 
 router = APIRouter()
 
-
 @router.post("/attrition")
 async def predict_attrition():
     updated_count = await predict_attrition_probabilities()

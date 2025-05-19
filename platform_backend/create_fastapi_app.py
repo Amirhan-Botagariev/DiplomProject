@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import (
     get_swagger_ui_html,
     get_swagger_ui_oauth2_redirect_html,
@@ -9,6 +10,7 @@ from fastapi.openapi.docs import (
 from fastapi.responses import ORJSONResponse
 
 from core.models import db_helper
+# from api.api_v1 import router as api_v1_router
 
 
 def register_static_docs_routers(app: FastAPI):
@@ -52,6 +54,14 @@ def create_app(
         docs_url=None if create_custom_static_urls else "/docs",
         redoc_url=None if create_custom_static_urls else "/redoc",
     )
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["http://localhost:5173"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+    # app.include_router(api_v1_router, prefix="/api")
     if create_custom_static_urls:
         register_static_docs_routers(app)
     return app

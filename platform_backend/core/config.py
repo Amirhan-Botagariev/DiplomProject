@@ -71,13 +71,13 @@ class LoggingConfig(BaseModel):
 class ApiV1Prefix(BaseModel):
     prefix: str = "/v1"
     users: str = "/users"
+    employees: str = "/employees"
     auth: str = "/auth"
     messages: str = "/messages"
     predict: str = "/predict"
     metabase: str = "/metabase"
     predefined_sources: str = '/sources'
     query: str = '/query'
-
 
 
 class ApiPrefix(BaseModel):

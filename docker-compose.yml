@@ -10,6 +10,7 @@ services:
       - "5432:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
+      - ./sys/postgres/init-multiple-db.sh:/docker-entrypoint-initdb.d/init-multiple-db.sh:ro
     restart: always
     networks:
       - platform
@@ -126,7 +127,8 @@ services:
       dockerfile: sys/metabase/Dockerfile
     container_name: metabase
     depends_on:
-      - pg
+      pg:
+        condition: service_healthy
     env_file:
       - sys/env/.env.db
       - sys/env/.env.common

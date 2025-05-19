@@ -19,12 +19,14 @@ export default defineConfig(({ mode }) => {
       },
 
       proxy: {
-        '/backend': {
+        '/api': {
           target: env.VITE_BACKEND_URL,
           changeOrigin: true,
           rewrite: (path) => path, // оставляем путь без изменений
         },
       },
+      // ГЛАВНОЕ: fallback для SPA
+      historyApiFallback: true,
     },
   };
 });

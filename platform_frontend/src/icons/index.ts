@@ -52,8 +52,6 @@ import ChatIcon from "./chat.svg?react";
 import MoreDotIcon from "./moredot.svg?react";
 import AlertHexaIcon from "./alert-hexa.svg?react";
 import ErrorHexaIcon from "./info-hexa.svg?react";
-
-// Добавь новые SVG сюда:
 import DashboardIcon from "./dashboard.svg?react";
 import ReportsIcon from "./reports.svg?react";
 import UsersIcon from "./users.svg?react";
@@ -61,8 +59,10 @@ import OrdersIcon from "./orders.svg?react";
 import DepartmentsIcon from "./departments.svg?react";
 import HelpIcon from "./help.svg?react";
 import SettingsIcon from "./settings.svg?react";
+import NotificationIcon from "./notification-bell.svg?react";
 
 export {
+  NotificationIcon,
   PlusIcon,
   CloseIcon,
   BoxIcon,
