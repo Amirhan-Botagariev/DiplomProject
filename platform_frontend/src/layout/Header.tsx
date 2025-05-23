@@ -3,7 +3,7 @@ import SearchIcon from "../icons/search.svg?react";
 import MailIcon from "../icons/mail.svg?react";
 import ProfileIcon from "../icons/profile.svg?react";
 import ArrowDownIcon from "../icons/arrow-down.svg?react";
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -58,7 +58,9 @@ const Header = () => {
 
       {/* Навигация */}
       <div className="flex items-center gap-6">
-        <span className="text-sm font-medium text-black cursor-pointer">Документы</span>
+        <Link to="/news" className="text-sm font-medium text-black cursor-pointer">
+    Документы
+        </Link>
         <span className="text-sm font-medium text-black cursor-pointer">Новости</span>
         <span className="text-sm font-medium text-black cursor-pointer">Отчет</span>
       </div>

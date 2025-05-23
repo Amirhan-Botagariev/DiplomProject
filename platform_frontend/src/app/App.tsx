@@ -13,6 +13,7 @@ import NotificationsPage from "../pages/NotificationsPage.tsx";
 import RiskCategoryPage from "../pages/RiskCategoryPage.tsx";
 import EmployeesListPage from "../pages/EmployeesListPage";
 import JobRolesPage from "../pages/JobRolesPage";
+import NewsPage from "../pages/NewsPage.tsx"; // убедись в правильном пути
 
 export default function App() {
   const [collapsed, setCollapsed] = useState(false);
@@ -26,6 +27,7 @@ export default function App() {
             <Routes>
               <Route path="/" element={<Navigate to="/dashboard" />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/news" element={<NewsPage />} />
               <Route path="/reports/:type" element={<ReportSelector />} /> {/* Страница выбора отчетов по типу */}
               <Route path="/reports/:type/:id" element={<DashboardPage />} /> {/* Страница отдельного отчета */}
               <Route path="/reports/demo-age" element={<DemoAgeReportPage />} />
