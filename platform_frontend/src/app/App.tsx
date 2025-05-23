@@ -5,10 +5,10 @@ import Sidebar from "../layout/Sidebar.tsx";
 import Header from "../layout/Header.tsx";
 import Dashboard from "../pages/Dashboard.tsx";
 import ReportSelector from "../pages/reports/ReportSelector.tsx"; // правильный импорт
-import DashboardPage from "../pages/reports/DashboardPage.tsx";    // добавить
-import DemoAgeReportPage from "../pages/DemoAgeReportPage"; // добавить
-import DemoGenderReportPage from "../pages/DemoGenderReportPage"; // добавить
-import DemoEducationReportPage from "../pages/DemoEducationReportPage"; // добавить
+import DashboardPage from "../pages/reports/DashboardPage.tsx";
+import DemoAgeReportPage from "../pages/static_reports/DemoAgeReportPage";
+import DemoGenderReportPage from "../pages/static_reports/DemoGenderReportPage.tsx";
+import DemoEducationReportPage from "../pages/static_reports/DemoEducationReportPage";
 import NotificationsPage from "../pages/NotificationsPage.tsx";
 import RiskCategoryPage from "../pages/RiskCategoryPage.tsx";
 import EmployeesListPage from "../pages/EmployeesListPage";

@@ -85,8 +85,8 @@ export default function RiskCategoryPage() {
       try {
         const res = await fetch(`/api/v1/employees/attrition_risk`);
         const data = await res.json();
-        // Filter out employees who have left (attrition === true)
-        const filteredData = data.filter(emp => !emp.attrition);
+        const employeesArr = Array.isArray(data.employees) ? data.employees : [];
+        const filteredData = employeesArr.filter(emp => !emp.attrition);
         setEmployees(filteredData);
         setTotalCount(filteredData.length);
       } catch (e) {
@@ -145,7 +145,7 @@ export default function RiskCategoryPage() {
                   {emp.avatar_url ? (
                     <img src={emp.avatar_url} alt={emp.name} className="w-16 h-16 rounded-full object-cover" />
                   ) : (
-                    <span className="text-3xl font-bold text-blue-500">{emp.name[0]}</span>
+                    <span className="text-3xl font-bold text-blue-500">{emp.employee_number ? emp.employee_number[0] : '?'}</span>
                   )}
                 </div>
                 <div className="text-lg font-semibold mb-1">{emp.name}</div>

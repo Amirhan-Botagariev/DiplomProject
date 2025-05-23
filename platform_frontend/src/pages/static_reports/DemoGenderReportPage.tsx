@@ -12,7 +12,7 @@ import {
   Legend,
   ArcElement
 } from "chart.js";
-import { departmentMap, genderMap, maritalStatusMap } from "../lib/translations";
+import { departmentMap, genderMap, maritalStatusMap } from "../../lib/translations";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
@@ -21,21 +21,15 @@ const DemoGenderReportPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get("/api/v1/employees/gender_stats/").then(res => {
+    axios.get("/api/v1/reports/gender/").then(res => {
       setStats(res.data);
       setLoading(false);
-      // DEBUG: log raw backend data
-      console.log('gender_stats raw:', res.data);
     });
   }, []);
 
   if (loading || !stats) return <Box p={4} textAlign="center"><CircularProgress /></Box>;
 
-  // DEBUG: show raw data for troubleshooting
-  // Remove after debug
-  if (!loading && stats) {
-    console.log('gender_stats for debug:', stats);
-  }
+
 
   // Метрики
   const count = stats.count;

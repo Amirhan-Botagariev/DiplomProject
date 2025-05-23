@@ -4,11 +4,12 @@ from core.config import settings
 from .users import router as users_router
 from .auth import router as auth_router
 from .messages import router as messages_router
-from .employees import employees_router, employees_notifications_router
+from .employees import employees_router, employees_notifications_router, reference_router
 from api.api_v1.predict.predict import router as predict_router
 from .integration.metabase.metabase import router as metabase_router
 from .visualizations.sources import router as visualization_router
 from .visualizations.query import router as query_router
+from .reports.routes import router as reports_router
 
 router = APIRouter(
     prefix=settings.api.v1.prefix,
@@ -44,6 +45,12 @@ router.include_router(
 )
 
 router.include_router(
+    reference_router,
+    prefix="/reference",
+    tags=["Reference"],
+)
+
+router.include_router(
     predict_router,
     prefix=settings.api.v1.predict,
     tags=["Predict"],
@@ -65,4 +72,10 @@ router.include_router(
     query_router,
     prefix=settings.api.v1.query,
     tags=["Query"],
+)
+
+router.include_router(
+    reports_router,
+    prefix="/reports",
+    tags=["Reports"],
 )

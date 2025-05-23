@@ -49,8 +49,25 @@ export default function NotificationsPage() {
       try {
         const res = await fetch(`/api/v1/employees/attrition_risk`);
         const data = await res.json();
-        // Показываем только неуволенных сотрудников
-        const filtered = data.filter((e: any) => !e.attrition);
+        // Берём массив сотрудников из data.employees
+        const employeesArr = Array.isArray(data.employees) ? data.employees : [];
+        // Удаляем нормализацию risk на 100, теперь risk уже в диапазоне 0–1
+        const filtered = employeesArr
+          .filter((e: any) => !e.attrition)
+          .map((e: any) => ({
+            ...e,
+            id: e.employee_id,
+            name: e.full_name || '',
+            position: e.job_role || '',
+            department: e.department || '',
+            risk: e.risk,
+            reason: e.reason || '',
+            avatar_url: e.avatar_url || '',
+            years_at_company: e.years_at_company,
+            gender: e.gender,
+            age: e.age,
+            attrition: e.attrition,
+          }));
         setEmployees(filtered);
       } catch (e) {
         setEmployees([]);

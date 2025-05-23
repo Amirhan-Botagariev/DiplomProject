@@ -20,7 +20,7 @@ const JobRolesPage: React.FC = () => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    axios.get("/api/v1/employees/job_roles/").then(res => setJobRoles(res.data ?? []));
+    axios.get("/api/v1/reference/job_roles").then(res => setJobRoles(res.data ?? []));
   }, []);
 
   const handleShowEmployees = (role: string) => {

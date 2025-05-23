@@ -12,7 +12,7 @@ import {
   Legend,
   ArcElement
 } from "chart.js";
-import { departmentMap, jobRoleMap, educationLevelMap, educationFieldMap } from "../lib/translations";
+import { departmentMap, jobRoleMap, educationLevelMap, educationFieldMap } from "../../lib/translations";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
@@ -21,7 +21,7 @@ const DemoEducationReportPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get("/api/v1/employees/education_stats/").then(res => {
+    axios.get("/api/v1/reports/education/").then(res => {
       setStats(res.data);
       setLoading(false);
     });

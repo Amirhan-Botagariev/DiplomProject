@@ -11,7 +11,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { departmentMap, jobRoleMap } from "../lib/translations";
+import { departmentMap, jobRoleMap } from "../../lib/translations";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -20,7 +20,7 @@ const DemoAgeReportPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get("/api/v1/employees/age_stats/").then(res => {
+    axios.get("/api/v1/reports/age/").then(res => {
       setStats(res.data);
       setLoading(false);
     });
