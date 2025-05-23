@@ -8,6 +8,7 @@ class DashboardConfiguration(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
+    route_id = Column(String, nullable=True, unique=True, index=True)
     description = Column(Text, nullable=True)
     graphs = Column(JSON, nullable=False)
     created_at = Column(

@@ -6,9 +6,9 @@ from .auth import router as auth_router
 from .messages import router as messages_router
 from .employees import employees_router, employees_notifications_router, reference_router
 from api.api_v1.predict.predict import router as predict_router
-from .integration.metabase.metabase import router as metabase_router
-from .visualizations.sources import router as visualization_router
-from .visualizations.query import router as query_router
+from api.api_v1.visualizations.sql_queries.sources import router as visualization_router
+from api.api_v1.visualizations.sql_queries.query import router as query_router
+from api.api_v1.visualizations.dashboards.dashboards import router as dashboard_router
 from .reports.routes import router as reports_router
 
 router = APIRouter(
@@ -57,12 +57,6 @@ router.include_router(
 )
 
 router.include_router(
-    metabase_router,
-    prefix=settings.api.v1.metabase,
-    tags=["Metabase"],
-)
-
-router.include_router(
     visualization_router,
     prefix=settings.api.v1.predefined_sources,
     tags=["Sources"],
@@ -72,6 +66,12 @@ router.include_router(
     query_router,
     prefix=settings.api.v1.query,
     tags=["Query"],
+)
+
+router.include_router(
+    dashboard_router,
+    prefix=settings.api.v1.dashboards,
+    tags=["Dashboards"],
 )
 
 router.include_router(

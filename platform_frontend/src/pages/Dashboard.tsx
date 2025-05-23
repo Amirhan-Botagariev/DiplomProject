@@ -4,7 +4,7 @@ import MinusIcon from "../icons/minus.svg?react";
 import TrendUpIcon from "../icons/trend-up.svg?react";
 import TrendDownIcon from "../icons/trend-down.svg?react";
 import CandidatesIcon from "../icons/candidates.svg?react";
-import MetabaseEmbed from "../components/MetabaseEmbed";
+import React from "react";
 
 const Dashboard = () => {
   return (
@@ -49,14 +49,6 @@ const Dashboard = () => {
           changeType="down"
           icon={<MinusIcon />}
         />
-      </div>
-
-      {/* Metabase Dashboard */}
-      <div className="bg-white rounded-lg p-6 shadow-sm">
-        <h3 className="text-sm font-medium tracking-[0.03em] uppercase mb-4">
-          Численность сотрудников (Metabase)
-        </h3>
-        <MetabaseEmbed dashboardId={1} question_id={1} />
       </div>
     </div>
   );

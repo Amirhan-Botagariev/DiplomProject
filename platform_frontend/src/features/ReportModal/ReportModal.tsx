@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, {Fragment, useCallback, useEffect} from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { X } from 'lucide-react';
 
@@ -7,10 +7,11 @@ import StepIndicator from './StepIndicator';
 import ReportModalFooter from './ReportModalFooter';
 
 import BasicInfoStep from './steps/BasicInfoStep';
-import DataSourceStep from './steps/DataSourceStep';
-import FieldsSelectionStep from './steps/FieldsSelectionStep';
+import QuerySourceStep from './steps/QuerySourceStep';
+import FieldSelectionStep from './steps/sql-builder/FieldSelection.tsx';
 import FiltersStep from './steps/FiltersStep';
 import VisualizationStep from './steps/VisualizationStep';
+import QueryConfigStep from "./steps/QueryConfigStep.tsx";
 
 interface ReportModalProps {
   isOpen: boolean;
@@ -20,7 +21,8 @@ interface ReportModalProps {
 const steps = [
   'Основное',
   'Источник данных',
-  'Поля',
+  'Конструктор запроса',
+  'Выбор полей',
   'Фильтры',
   'Визуализация',
 ];
@@ -65,15 +67,32 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
+  const handleQueryChange = useCallback((query: string) => {
+    updateForm('query', query);
+  }, [updateForm]);
+
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
         return <BasicInfoStep formData={formData} updateForm={updateForm} />;
       case 2:
-        return <DataSourceStep formData={formData} updateForm={updateForm} />;
+        return <QuerySourceStep formData={formData} updateForm={updateForm} />;
       case 3:
-        return <FieldsSelectionStep formData={formData} updateForm={updateForm} />;
+        return (
+          <QueryConfigStep
+            formData={formData}
+            updateForm={updateForm}
+            onQueryChange={handleQueryChange}
+          />
+        );
       case 4:
+        return (
+          <FieldSelectionStep
+            formData={formData}
+            updateForm={updateForm}
+          />
+        );
+      case 5:
         return (
           <FiltersStep
             formData={formData}
@@ -82,7 +101,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose }) => {
             removeFilter={removeFilter}
           />
         );
-      case 5:
+      case 6:
         return <VisualizationStep formData={formData} updateForm={updateForm} />;
       default:
         return null;

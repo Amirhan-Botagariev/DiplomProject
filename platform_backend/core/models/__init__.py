@@ -12,7 +12,6 @@ _all_ = (
     "EducationField",
     "Salary",
     "PerformanceReview",
-    "Dashboard",
     "QueryCache",
     "QueryHistory",
     "PredefinedSource",
@@ -34,8 +33,6 @@ from .employees.marital_status import MaritalStatus
 from .employees.education_field import EducationField
 from .employees.salary import Salary
 from .employees.performance_review import PerformanceReview
-
-from .metabase.dashboards import Dashboard
 
 from .visualizations.query_cache import QueryCache
 from .visualizations.query_history import QueryHistory
