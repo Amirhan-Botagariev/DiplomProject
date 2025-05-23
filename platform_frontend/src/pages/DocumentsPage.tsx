@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Search, Filter, FileText, Download, Calendar, ChevronDown, Plus, MoreHorizontal } from 'lucide-react';
-import DocumentCard from '../components/DocumentCard';
-import { Document } from '../types/document';
+import DocumentCard from '../components/Cards/DocumentCard.tsx';
+import { Document } from '../components/Cards/DocumentCard.tsx';
 
 const documentsData: Document[] = [
   {
@@ -71,7 +71,7 @@ const categories = [
   'Приказы'
 ];
 
-const Documents = () => {
+const DocumentsPage = () => {
   const [activeCategory, setActiveCategory] = useState('Все документы');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -222,4 +222,4 @@ const Documents = () => {
   );
 };
 
-export default Documents;
+export default DocumentsPage;
