@@ -7,14 +7,19 @@ import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const navigate = useNavigate();
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Закрытие меню при клике вне dropdown-а
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const notificationsRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setMenuOpen(false);
+      }
+      if (notificationsRef.current && !notificationsRef.current.contains(e.target as Node)) {
+        setNotificationsOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -60,7 +65,49 @@ const Header = () => {
 
       {/* Иконки справа */}
       <div className="flex items-center gap-6 relative">
-        <MailIcon className="w-[21px] h-[21px] text-black" />
+        {/* Уведомления */}
+        <div ref={notificationsRef} className="relative">
+          <MailIcon
+            className="w-[21px] h-[21px] text-black cursor-pointer"
+            onClick={() => setNotificationsOpen((prev) => !prev)}
+          />
+          {notificationsOpen && (
+            <div className="absolute top-[calc(100%+10px)] right-0 w-96 max-h-[400px] bg-white border shadow-2xl rounded-xl z-50 overflow-hidden flex flex-col">
+              <div className="px-5 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-black">Уведомления</h2>
+              </div>
+              <div className="overflow-y-auto flex-1">
+                <ul className="divide-y divide-gray-100">
+                  {[
+                    {
+                      title: "Новое сообщение от администратора",
+                      date: "23 мая 2025",
+                      description: "Пожалуйста, проверьте почту.",
+                    },
+                    {
+                      title: "Срок сдачи отчета",
+                      date: "22 мая 2025",
+                      description: "Не забудьте сдать отчет до конца дня.",
+                    },
+                    {
+                      title: "Обновление системы",
+                      date: "20 мая 2025",
+                      description: "Система была успешно обновлена.",
+                    },
+                  ].map((notif, i) => (
+                    <li key={i} className="px-5 py-4 hover:bg-gray-50 cursor-pointer">
+                      <p className="text-sm text-gray-400">{notif.date}</p>
+                      <p className="text-base font-medium text-black">{notif.title}</p>
+                      <p className="text-sm text-gray-600">{notif.description}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Профиль */}
         <div ref={dropdownRef} className="relative">
           <div
             className="flex items-center gap-2 cursor-pointer select-none"
