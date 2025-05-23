@@ -64,7 +64,6 @@ const Header = () => {
         <Link to="/news" className="text-sm font-medium text-black cursor-pointer">
     Новости
         </Link>
-        <span className="text-sm font-medium text-black cursor-pointer">Отчет</span>
       </div>
 
       {/* Иконки справа */}
