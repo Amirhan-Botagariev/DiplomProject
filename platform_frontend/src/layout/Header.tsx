@@ -58,10 +58,12 @@ const Header = () => {
 
       {/* Навигация */}
       <div className="flex items-center gap-6">
-        <Link to="/news" className="text-sm font-medium text-black cursor-pointer">
+        <Link to="/documents" className="text-sm font-medium text-black cursor-pointer">
     Документы
         </Link>
-        <span className="text-sm font-medium text-black cursor-pointer">Новости</span>
+        <Link to="/news" className="text-sm font-medium text-black cursor-pointer">
+    Новости
+        </Link>
         <span className="text-sm font-medium text-black cursor-pointer">Отчет</span>
       </div>
 
