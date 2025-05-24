@@ -76,8 +76,9 @@ class ApiV1Prefix(BaseModel):
     messages: str = "/messages"
     predict: str = "/predict"
     metabase: str = "/metabase"
-    predefined_sources: str = '/sources'
-    query: str = '/query'
+    predefined_sources: str = "/sources"
+    query: str = "/query"
+    dashboards: str = "/dashboards"
 
 
 class ApiPrefix(BaseModel):
