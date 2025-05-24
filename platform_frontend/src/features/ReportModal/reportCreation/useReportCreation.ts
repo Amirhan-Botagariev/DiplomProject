@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 export type DataSource = 'users' | 'orders' | 'departments' | 'products';
-export type QueryMode = 'template' | 'builder' | 'custom';
+
 export type Visualization = 'table' | 'bar' | 'pie';
 
 export type FilterOperator = 'equals' | 'contains' | 'greater_than' | 'less_than' | 'between';
@@ -20,8 +20,6 @@ export interface ReportFormData {
   fields: string[];
   filters: Filter[];
   visualization: Visualization | '';
-  query_mode: 'template' | 'builder' | 'custom';
-  query: string;
 }
 
 export interface StepValidation {
@@ -33,8 +31,6 @@ const initialFormData: ReportFormData = {
   name: '',
   description: '',
   source: '',
-  query_mode: 'builder',
-  query: '',
   fields: [],
   filters: [],
   visualization: '',
@@ -44,7 +40,7 @@ const useReportCreation = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<ReportFormData>(initialFormData);
 
-  const totalSteps = 6;
+  const totalSteps = 5;
 
   const updateForm = (key: keyof ReportFormData, value: any) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
@@ -66,8 +62,8 @@ const useReportCreation = () => {
   const updateFilter = (id: string, key: keyof Filter, value: any) => {
     setFormData((prev) => ({
       ...prev,
-      filters: prev.filters.map((f) =>
-        f.id === id ? { ...f, [key]: value } : f
+      filters: prev.filters.map((filter) =>
+        filter.id === id ? { ...filter, [key]: value } : filter
       ),
     }));
   };
@@ -75,7 +71,7 @@ const useReportCreation = () => {
   const removeFilter = (id: string) => {
     setFormData((prev) => ({
       ...prev,
-      filters: prev.filters.filter((f) => f.id !== id),
+      filters: prev.filters.filter((filter) => filter.id !== id),
     }));
   };
 
@@ -83,36 +79,36 @@ const useReportCreation = () => {
     switch (currentStep) {
       case 1:
         if (!formData.name.trim()) {
-          return { isValid: false, errorMessage: 'Введите название отчёта' };
-        }
-        return { isValid: true, errorMessage: '' };
-
-      case 2:
-        if (!formData.query_mode) {
-          return { isValid: false, errorMessage: 'Выберите метод запроса' };
-        }
-        return { isValid: true, errorMessage: '' };
-
-      case 3:
-        if (!formData.source) {
-          return { isValid: false, errorMessage: 'Выберите источник данных' };
-        }
-        return { isValid: true, errorMessage: '' };
-
-      case 4:
-        if (formData.fields.length === 0) {
           return {
             isValid: false,
-            errorMessage: 'Выберите хотя бы одно поле',
+            errorMessage: 'Введите название отчёта',
           };
         }
         return { isValid: true, errorMessage: '' };
 
-      case 5:
-        const hasInvalid = formData.filters.some(
-          (f) => !f.field || !f.value
+      case 2:
+        if (!formData.source) {
+          return {
+            isValid: false,
+            errorMessage: 'Пожалуйста, выберите источник данных',
+          };
+        }
+        return { isValid: true, errorMessage: '' };
+
+      case 3:
+        if (formData.fields.length === 0) {
+          return {
+            isValid: false,
+            errorMessage: 'Пожалуйста, выберите хотя бы одно поле',
+          };
+        }
+        return { isValid: true, errorMessage: '' };
+
+      case 4:
+        const invalidFilter = formData.filters.find(
+          (filter) => !filter.field || !filter.value
         );
-        if (hasInvalid) {
+        if (invalidFilter) {
           return {
             isValid: false,
             errorMessage: 'Заполните все поля фильтров или удалите незаполненные',
@@ -120,7 +116,7 @@ const useReportCreation = () => {
         }
         return { isValid: true, errorMessage: '' };
 
-      case 6:
+      case 5:
         if (!formData.visualization) {
           return {
             isValid: false,

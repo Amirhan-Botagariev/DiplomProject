@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   DashboardIcon,
   ReportsIcon,
@@ -13,20 +13,12 @@ import {
   NotificationIcon
 } from "../icons";
 
-interface DashboardItem {
-  id: number;
-  name: string;
-  route_id: string;
-  description?: string;
-  graphs?: any[];
-}
-
 interface MenuItem {
   id: string;
   label: string;
-  icon?: React.ReactNode;
+  icon: React.ReactNode;
   route?: string;
-  children?: DashboardItem[];
+  children?: MenuItem[];
 }
 
 const Sidebar = ({
@@ -37,32 +29,11 @@ const Sidebar = ({
   setCollapsed: (v: boolean) => void;
 }) => {
   const location = useLocation();
-  const navigate = useNavigate();
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
-  const [dashboardReports, setDashboardReports] = useState<DashboardItem[]>([]);
-
-  const url = import.meta.env.VITE_BACKEND_URL;
 
   const toggleOpen = (id: string) => {
     setOpenItems((prev) => ({ ...prev, [id]: !prev[id] }));
   };
-
-    useEffect(() => {
-      const fetchDashboards = async () => {
-        try {
-          const res = await fetch(`${url}/api/v1/dashboards/`);
-          const data = await res.json();
-          setDashboardReports(data.map((item: DashboardItem) => ({
-            ...item,
-            route_id: `my-reports/${item.route_id}`,
-          })));
-        } catch (err) {
-          console.error("Ошибка загрузки дэшбордов:", err);
-        }
-      };
-
-      fetchDashboards();
-    }, []);
 
   const menuItems: MenuItem[] = [
     {
@@ -76,43 +47,41 @@ const Sidebar = ({
       label: "Отчёты",
       icon: <ReportsIcon />,
       children: [
-        { id: 1, name: "Командировки", route_id: "reports/travel" },
-        { id: 2, name: "Риск ухода (вероятность)", route_id: "reports/retention-risk" },
-        { id: 3, name: "Пол и семейное положение", route_id: "reports/demo-gender" },
-        { id: 4, name: "Возрастной профиль", route_id: "reports/demo-age" },
-        { id: 5, name: "По отделам", route_id: "reports/org-department" },
-        { id: 6, name: "Тренинги vs текучка", route_id: "reports/training-vs-attrition" },
-        { id: 7, name: "Образование", route_id: "reports/demo-education" },
-        { id: 8, name: "По ролям и уровням", route_id: "reports/org-role" },
-        { id: 9, name: "Стаж в компании", route_id: "reports/tenure-company" },
-        { id: 10, name: "Тренинги за год", route_id: "reports/training-year" },
-        { id: 11, name: "Стаж в текущей роли / с менеджером", route_id: "reports/tenure-role" },
-        { id: 12, name: "Текучка по отделам", route_id: "reports/retention-dept" },
-        { id: 13, name: "Баланс работа–жизнь", route_id: "reports/work-life" },
+        { id: "demo-age", label: "Возрастной профиль", icon: <></>, route: "/reports/demo-age" },
+        { id: "demo-gender", label: "Пол и семейное положение", icon: <></>, route: "/reports/demo-gender" },
+        { id: "demo-education", label: "Образование", icon: <></>, route: "/reports/demo-education" },
+        { id: "org-department", label: "По отделам", icon: <></>, route: "/reports/org-department" },
+        { id: "org-role", label: "По ролям и уровням", icon: <></>, route: "/reports/org-role" },
+        { id: "tenure-company", label: "Стаж в компании", icon: <></>, route: "/reports/tenure-company" },
+        { id: "tenure-role", label: "Стаж в текущей роли / с менеджером", icon: <></>, route: "/reports/tenure-role" },
+        { id: "retention-dept", label: "Текучка по отделам", icon: <></>, route: "/reports/retention-dept" },
+        { id: "retention-risk", label: "Риск ухода (вероятность)", icon: <></>, route: "/reports/retention-risk" },
+        { id: "travel", label: "Командировки", icon: <></>, route: "/reports/travel" },
+        { id: "work-life", label: "Баланс работа‑жизнь", icon: <></>, route: "/reports/work-life" },
+        { id: "training-year", label: "Тренинги за год", icon: <></>, route: "/reports/training-year" },
+        { id: "training-vs-attrition", label: "Тренинги vs текучка", icon: <></>, route: "/reports/training-vs-attrition" },
       ],
-    },
-    {
-      id: "my-reports",
-      label: "Мои отчеты",
-      icon: <ReportsIcon />,
-      children: dashboardReports,
     },
     {
       id: "employees",
       label: "Сотрудники",
       icon: <UsersIcon />,
+      children: [
+        { id: "list", label: "Список сотрудников", icon: <></>, route: "/employees/list" },
+        { id: "positions", label: "Должности", icon: <></>, route: "/employees/positions" },
+      ],
     },
     {
       id: "orders",
       label: "Приказы",
       icon: <OrdersIcon />,
-      route: "/orders",
+      route: "/orders"
     },
     {
       id: "departments",
       label: "Подразделения",
       icon: <DepartmentsIcon />,
-      route: "/departments",
+      route: "/departments"
     },
     {
       id: "notifications",
@@ -136,7 +105,7 @@ const Sidebar = ({
       <div className="flex flex-col justify-between h-full px-4 py-6">
         <div className="flex flex-col gap-10">
           <div className={`flex items-center justify-${collapsed ? "center" : "between"} h-10`}>
-            {!collapsed && <h1 className="text-2xl font-bold">HRDashboard</h1>}
+            {!collapsed && <h1 className="text-2xl font-bold font-montserrat text-black">HRDashboard</h1>}
             <button onClick={() => setCollapsed(!collapsed)} className={`${collapsed ? "" : "ml-auto"}`}>
               <ArrowRightIcon className={`w-4 h-4 ${collapsed ? "" : "rotate-180"}`} />
             </button>
@@ -144,7 +113,7 @@ const Sidebar = ({
 
           <nav className="flex flex-col gap-2">
             {menuItems.map(({ id, label, icon, route, children }) => {
-              const isActive = route ? location.pathname.startsWith(route) : false;
+              const isActive = location.pathname.startsWith(route || `/${id}`);
               const isOpen = openItems[id];
 
               return (
@@ -157,7 +126,7 @@ const Sidebar = ({
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <div className={`w-5 h-5`}>{icon}</div>
+                        <div className={`w-5 h-5 ${isActive ? "text-white" : "text-black"}`}>{icon}</div>
                         {!collapsed && label}
                       </div>
                     </Link>
@@ -169,14 +138,14 @@ const Sidebar = ({
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-5 h-5">{icon}</div>
+                        <div className={`w-5 h-5 ${isOpen ? "text-white" : "text-black"}`}>{icon}</div>
                         {!collapsed && label}
                       </div>
                       {!collapsed && children && (
                         <ArrowDownIcon
-                          className={`w-3 h-3 transition-transform ${isOpen ? "rotate-180" : ""} ${
-                            isOpen ? "text-white" : "text-black"
-                          }`}
+                          className={`w-3 h-3 transition-transform ${
+                            isOpen ? "rotate-180" : ""
+                          } ${isOpen ? "text-white" : "text-black"}`}
                         />
                       )}
                     </button>
@@ -185,23 +154,18 @@ const Sidebar = ({
                   {!collapsed && isOpen && children && (
                     <div className="ml-8 mt-1 flex flex-col gap-1">
                       {children.map((child) => {
-                        const route = `/${child.route_id}`;
-                        const childActive = location.pathname === route;
-
+                        const childActive = location.pathname === child.route;
                         return (
-                          <button
-                            key={child.route_id}
-                            onClick={() =>
-                              navigate(route, {
-                                state: { dashboard: child },
-                              })
-                            }
-                            className={`flex items-center gap-3 text-sm px-2 py-1 rounded-md text-left w-full ${
+                          <Link
+                            key={child.id}
+                            to={child.route!}
+                            className={`flex items-center gap-3 text-sm px-2 py-1 rounded-md ${
                               childActive ? "bg-[#5FB3F6] text-white" : "hover:bg-gray-100 text-black"
                             }`}
                           >
-                            {child.name}
-                          </button>
+                            {child.icon}
+                            {child.label}
+                          </Link>
                         );
                       })}
                     </div>
