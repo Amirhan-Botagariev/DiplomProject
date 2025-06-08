@@ -43,11 +43,12 @@ export default function NotificationsPage() {
   const [employees, setEmployees] = useState<RiskyEmployee[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const url = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     async function fetchRiskyEmployees() {
       try {
-        const res = await fetch(`/api/v1/employees/attrition_risk`);
+        const res = await fetch(`${url}/api/v1/employees/attrition_risk`);
         const data = await res.json();
         // Берём массив сотрудников из data.employees
         const employeesArr = Array.isArray(data.employees) ? data.employees : [];

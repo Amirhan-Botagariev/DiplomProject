@@ -1,6 +1,6 @@
 // import React, { useState, useEffect, useMemo } from 'react';
 // import FieldSelectionStep from '../FieldSelectionStep.tsx';
-// // import FilterSortStep from '../sql-builder/FilterSortStep.tsx';
+// import FilterSortStep from '../sql-builder/FilterSortStep.tsx';
 //
 // import { generateSqlQuery } from './sqlGenerator';
 // import { VisualField, Filter, Sort } from './index';
@@ -9,7 +9,7 @@
 //   onQueryChange: (query: string) => void;
 // }
 //
-// const SQLBuilder: WReact.FC<SQLBuilderProps> = ({ onQueryChange }) => {
+// const SQLBuilder: React.FC<SQLBuilderProps> = ({ onQueryChange }) => {
 //   const [selectedFields, setSelectedFields] = useState<VisualField[]>([]);
 //   const [filters, setFilters] = useState<Filter[]>([]);
 //   const [sorts, setSorts] = useState<Sort[]>([]);
@@ -41,16 +41,16 @@
 //             setSelectedFields={setSelectedFields}
 //           />
 //         </div>
-//         {/*<div className="w-full">*/}
-//         {/*  <FilterSortStep*/}
-//         {/*    filters={filters}*/}
-//         {/*    setFilters={setFilters}*/}
-//         {/*    sorts={sorts}*/}
-//         {/*    setSorts={setSorts}*/}
-//         {/*    selectedFields={selectedFields}*/}
-//         {/*    sql={sql}*/}
-//         {/*  />*/}
-//         {/*</div>*/}
+//         <div className="w-full">
+//           <FilterSortStep
+//             filters={filters}
+//             setFilters={setFilters}
+//             sorts={sorts}
+//             setSorts={setSorts}
+//             selectedFields={selectedFields}
+//             sql={sql}
+//           />
+//         </div>
 //       </div>
 //     </div>
 //   );

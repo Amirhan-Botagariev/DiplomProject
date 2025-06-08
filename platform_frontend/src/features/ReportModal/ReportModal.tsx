@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, {Fragment, useCallback, useEffect} from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { X } from 'lucide-react';
 
@@ -7,25 +7,19 @@ import StepIndicator from './StepIndicator';
 import ReportModalFooter from './ReportModalFooter';
 
 import BasicInfoStep from './steps/BasicInfoStep';
-import DataSourceStep from './steps/DataSourceStep';
-import FieldsSelectionStep from './steps/FieldsSelectionStep';
-import FiltersStep from './steps/FiltersStep';
-import VisualizationStep from './steps/VisualizationStep';
+import QueryConfigStep from "./steps/QueryConfigStep.tsx";
+import ChartConfigStep from './steps/ChartConfigStep';
 
 interface ReportModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess: () => void;
+  routeId: string;
 }
 
-const steps = [
-  'Основное',
-  'Источник данных',
-  'Поля',
-  'Фильтры',
-  'Визуализация',
-];
+const steps = ['Основное', 'Запрос', 'Настройки графика'];
 
-const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose }) => {
+const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose, onSuccess, routeId }) => {
   const {
     currentStep,
     totalSteps,
@@ -35,9 +29,6 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose }) => {
     goToPreviousStep,
     validateCurrentStep,
     resetForm,
-    addFilter,
-    updateFilter,
-    removeFilter,
   } = useReportCreation();
 
   useEffect(() => {
@@ -56,38 +47,89 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose }) => {
     };
   }, [isOpen]);
 
-  const handleComplete = () => {
-    const validation = validateCurrentStep();
-    if (validation.isValid) {
-      console.log('✅ Отчёт создан:', formData);
-      resetForm();
-      onClose();
+const handleComplete = async () => {
+  const validation = validateCurrentStep();
+  if (!validation.isValid) return;
+
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/api/v1/dashboards?route_id=${encodeURIComponent(routeId)}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          description: formData.description,
+          query_type: "sql",
+          query: formData.query,
+          chart_type: formData.visualization || "bar",
+          ox_name: formData.fields?.[0] || "x",
+          oy_name: formData.fields?.[1] || "y",
+          legend: formData.fields?.[2] || undefined,
+        }),
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || result.status !== 1) {
+      throw new Error(result.message || "Ошибка при добавлении графика");
     }
-  };
+
+    console.log("✅ График успешно добавлен");
+    resetForm();
+    onClose();
+    onSuccess?.();
+
+  } catch (err: unknown) {
+    const error = err as Error;
+    console.error("❌ Ошибка при добавлении графика:", error.message);
+    alert("Не удалось сохранить график: " + error.message);
+  }
+};
+
+  const handleQueryChange = useCallback((query: string) => {
+    updateForm('query', query);
+  }, [updateForm]);
 
   const renderStepContent = () => {
-    switch (currentStep) {
-      case 1:
-        return <BasicInfoStep formData={formData} updateForm={updateForm} />;
-      case 2:
-        return <DataSourceStep formData={formData} updateForm={updateForm} />;
-      case 3:
-        return <FieldsSelectionStep formData={formData} updateForm={updateForm} />;
-      case 4:
-        return (
-          <FiltersStep
-            formData={formData}
-            addFilter={addFilter}
-            updateFilter={updateFilter}
-            removeFilter={removeFilter}
-          />
-        );
-      case 5:
-        return <VisualizationStep formData={formData} updateForm={updateForm} />;
-      default:
-        return null;
-    }
-  };
+  switch (currentStep) {
+    case 1:
+      return <BasicInfoStep formData={formData} updateForm={updateForm} />;
+    case 2:
+      return (
+        <QueryConfigStep
+          formData={formData}
+          updateForm={updateForm}
+          onQueryChange={handleQueryChange}
+        />
+      );
+    case 3:
+      return (
+        <ChartConfigStep
+          ox={formData.fields[0] || ''}
+          oy={formData.fields[1] || ''}
+          legend={formData.fields[2] || ''}
+          chartType={formData.visualization || 'bar'}
+          onChange={(key, value) => {
+            if (key === 'chart_type') {
+              updateForm('visualization', value);
+              return;
+            }
+            const updated = [...formData.fields];
+            if (key === 'ox') updated[0] = value;
+            if (key === 'oy') updated[1] = value;
+            if (key === 'legend') updated[2] = value;
+            updateForm('fields', updated);
+          }}
+        />
+      );
+    default:
+      return null;
+  }
+};
 
   return (
     <Transition.Root show={isOpen} as={Fragment}>

@@ -20,10 +20,10 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
           const isActive = stepNumber === currentStep;
           const isCompleted = stepNumber < currentStep;
           const isLast = stepNumber === totalSteps;
-          
+
           return (
             <React.Fragment key={stepNumber}>
-              <motion.div 
+              <motion.div
                 className="flex flex-col items-center"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -40,7 +40,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
                   whileTap={{ scale: 0.95 }}
                 >
                   {isCompleted ? (
-                    <motion.svg 
+                    <motion.svg
                       className="h-5 w-5 text-white"
                       viewBox="0 0 20 20"
                       fill="currentColor"
@@ -72,7 +72,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
                   {step}
                 </motion.span>
               </motion.div>
-              
+
               {!isLast && (
                 <motion.div
                   className={`h-0.5 w-full max-w-[60px] transition-all duration-300

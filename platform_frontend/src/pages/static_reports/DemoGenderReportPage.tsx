@@ -19,9 +19,10 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend,
 const DemoGenderReportPage: React.FC = () => {
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const url = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
-    axios.get("/api/v1/reports/gender/").then(res => {
+    axios.get(`${url}/api/v1/reports/gender/`).then(res => {
       setStats(res.data);
       setLoading(false);
     });

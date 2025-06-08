@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Query, Body
 from sqlalchemy import select
 
 from core.models.db_helper import db_helper
@@ -33,3 +33,37 @@ async def read_dashboard_configurations():
                 detail="Конфигурации дэшбордов не найдены",
             )
         return configs
+
+
+@router.post("/")
+async def add_graph_to_dashboard(
+    route_id: str = Query(...),
+    new_graph: dict = Body(...),
+):
+    async with db_helper.session_getter() as db:
+        try:
+            result = await db.execute(
+                select(DBDashboardConfig).where(DBDashboardConfig.route_id == route_id)
+            )
+            dashboard = result.scalar_one_or_none()
+
+            if not dashboard:
+                return {
+                    "message": f"Дэшборд с route_id '{route_id}' не найден",
+                    "status": 0,
+                }
+
+            print("📍 Было графиков:", len(dashboard.graphs or []))
+            # заменяем новым списком, чтобы SQLAlchemy отследил изменение
+            dashboard.graphs = (dashboard.graphs or []) + [new_graph]
+
+            await db.commit()
+            await db.refresh(dashboard)
+            print("✅ Новый график добавлен. Всего графиков:", len(dashboard.graphs))
+
+            return {"message": f"График добавлен в {dashboard.name}", "status": 1}
+
+        except Exception as e:
+            await db.rollback()
+            print("❌ Ошибка:", str(e))
+            return {"message": f"Ошибка: {str(e)}", "status": 0}

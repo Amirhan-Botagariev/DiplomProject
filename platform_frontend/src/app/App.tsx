@@ -39,6 +39,7 @@ export default function App() {
               <Route path="/notifications/:category" element={<RiskCategoryPage />} />
               <Route path="/employees/list" element={<EmployeesListPage />} />
               <Route path="/employees/positions" element={<JobRolesPage />} />
+              <Route path="/my-reports/:id" element={<ReportSelector />} />
             </Routes>
         </div>
       </div>

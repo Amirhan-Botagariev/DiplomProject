@@ -69,6 +69,7 @@ export default function RiskCategoryPage() {
   const [loading, setLoading] = useState(true);
   const [selectedEmployee, setSelectedEmployee] = useState<RiskyEmployee | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const url = import.meta.env.VITE_BACKEND_URL;
 
   const handleOpenModal = (emp: RiskyEmployee) => {
     setSelectedEmployee(emp);
@@ -83,7 +84,7 @@ export default function RiskCategoryPage() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/v1/employees/attrition_risk`);
+        const res = await fetch(`${url}/api/v1/employees/attrition_risk`);
         const data = await res.json();
         const employeesArr = Array.isArray(data.employees) ? data.employees : [];
         const filteredData = employeesArr.filter(emp => !emp.attrition);
