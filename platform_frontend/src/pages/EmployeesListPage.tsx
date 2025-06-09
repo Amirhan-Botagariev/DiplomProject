@@ -4,6 +4,7 @@ import { Search, Filter, ChevronDown, Plus } from 'lucide-react';
 import { Employee, EmployeeFilters } from '../components/employeeList/employee.ts';
 import EmployeeCard from '../components/employeeList/EmployeeCard.tsx';
 import FilterDialog from '../components/employeeList/FilterDialog.tsx';
+import EmployeeCreateModal from '../features/EmployeeModal/EmployeeCreateModal.tsx';
 
 const EmployeesListPage: React.FC = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -12,6 +13,8 @@ const EmployeesListPage: React.FC = () => {
   const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [departments, setDepartments] = useState<string[]>([]);
+  const url = import.meta.env.VITE_BACKEND_URL;
+  const [createModalOpen, setCreateModalOpen] = useState(false);
 
   // Получаем список сотрудников с бэка
   useEffect(() => {
@@ -33,7 +36,7 @@ const EmployeesListPage: React.FC = () => {
       if (filters.sortOrder) params.sort_order = filters.sortOrder;
 
       try {
-        const res = await axios.get('/api/v1/employees/', { params });
+        const res = await axios.get(`${url}/api/v1/employees/`, { params });
         setEmployees(res.data.employees ?? []);
       } catch (err) {
         console.error('Ошибка при загрузке сотрудников:', err);
@@ -45,7 +48,7 @@ const EmployeesListPage: React.FC = () => {
 
   // Загружаем список департаментов
   useEffect(() => {
-    axios.get('/api/v1/employees/departments/').then(res => {
+    axios.get(`${url}/api/v1/reference/departments/`).then(res => {
       setDepartments(res.data ?? []);
     });
   }, []);
@@ -57,7 +60,7 @@ const EmployeesListPage: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      await axios.delete(`/api/v1/employees/${id}`);
+      await axios.delete(`${url}/api/v1/employees/${id}`);
       setEmployees(prev => prev.filter(e => e.id !== id));
       setSelectedEmployee(null);
     } catch (error) {
@@ -68,10 +71,19 @@ const EmployeesListPage: React.FC = () => {
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold text-gray-900">Employees</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">Сотрудники</h1>
         <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center">
           <Plus className="h-5 w-5 mr-2" />
-          Add Employee
+          <button onClick={() => setCreateModalOpen(true)}>Добавить сотрудника</button>
+
+          <EmployeeCreateModal
+            isOpen={createModalOpen}
+            onClose={() => setCreateModalOpen(false)}
+            onSuccess={() => {
+              // например: fetchEmployees()
+              setCreateModalOpen(false);
+            }}
+          />
         </button>
       </div>
 
@@ -80,7 +92,7 @@ const EmployeesListPage: React.FC = () => {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
           <input
             type="text"
-            placeholder="Search employees..."
+            placeholder="Поиск сотрудника..."
             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -113,7 +125,8 @@ const EmployeesListPage: React.FC = () => {
                 />
               ) : (
                 <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold">
-                  {employee.name.split(' ').map(n => n[0]).join('')}
+                  {employee.name ? employee.name.split(' ').map(n => n[0]).join('')
+                  : '??'}
                 </div>
               )}
               <div>

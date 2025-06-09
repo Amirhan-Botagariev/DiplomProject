@@ -101,6 +101,7 @@ const Sidebar = ({
       id: "employees",
       label: "Сотрудники",
       icon: <UsersIcon />,
+      route: "/employees/list",
     },
     {
       id: "orders",
