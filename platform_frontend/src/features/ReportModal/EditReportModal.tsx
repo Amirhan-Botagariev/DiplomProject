@@ -97,13 +97,13 @@ const EditReportModal: React.FC<EditReportModalProps> = ({
             }
           : g
       );
-      await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/dashboards/${dashboard.routeId}`, {
+      console.log('123:', dashboard);
+      await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/dashboards/${dashboard.route_id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...dashboard, graphs: updatedGraphs }),
       });
 
-      console.log('✅ График обновлён');
       resetForm();
       onClose();
       onSuccess?.();

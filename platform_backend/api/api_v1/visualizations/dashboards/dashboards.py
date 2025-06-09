@@ -76,13 +76,15 @@ async def add_graph_to_dashboard(
     description="Обновляет поля дэшборда по его ID, включая список графиков.",
 )
 async def update_dashboard_configuration(
-    dashboard_id: int = Path(..., description="ID дэшборда"),
+    dashboard_id: str = Path(..., description="route_id дэшборда"),
     updated_dashboard: SchemaDashboardConfigUpdate = Body(...),
 ):
     async with db_helper.session_getter() as db:
         try:
             result = await db.execute(
-                select(DBDashboardConfig).where(DBDashboardConfig.id == dashboard_id)
+                select(DBDashboardConfig).where(
+                    DBDashboardConfig.route_id == dashboard_id
+                )
             )
             dashboard = result.scalar_one_or_none()
 
@@ -92,7 +94,9 @@ async def update_dashboard_configuration(
             dashboard.name = updated_dashboard.name
             dashboard.description = updated_dashboard.description
             dashboard.route_id = updated_dashboard.route_id
-            dashboard.graphs = updated_dashboard.graphs
+            dashboard.graphs = [
+                graph.model_dump() for graph in updated_dashboard.graphs
+            ]
 
             await db.commit()
             await db.refresh(dashboard)
@@ -101,3 +105,25 @@ async def update_dashboard_configuration(
         except Exception as e:
             await db.rollback()
             raise HTTPException(status_code=500, detail=f"Ошибка обновления: {str(e)}")
+
+@router.delete(
+    "/{dashboard_id}",
+    summary="Удалить конфигурацию дэшборда",
+    description="Удаляет дэшборд по route_id.",
+)
+async def delete_dashboard(
+    dashboard_id: str = Path(..., description="route_id дэшборда"),
+):
+    async with db_helper.session_getter() as db:
+        result = await db.execute(
+            select(DBDashboardConfig).where(DBDashboardConfig.route_id == dashboard_id)
+        )
+        dashboard = result.scalar_one_or_none()
+
+        if not dashboard:
+            raise HTTPException(status_code=404, detail="Дэшборд не найден")
+
+        await db.delete(dashboard)
+        await db.commit()
+
+        return {"message": "Дэшборд удалён", "status": 1}

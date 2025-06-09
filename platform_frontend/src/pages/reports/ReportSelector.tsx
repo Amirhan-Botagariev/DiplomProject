@@ -47,11 +47,6 @@ export default function ReportPage() {
   const [isDragging, setIsDragging] = useState(false);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [editingGraph, setEditingGraph] = useState<Graph | undefined>();
-
-      console.log("🧭 useParams().id:", id);
-    console.log("🧼 cleanId:", cleanId);
-    console.log("🛠 editingGraph:", editingGraph);
-    console.log("📤 routeId передаётся в EditReportModal:", cleanId || '');
   const fetchDashboard = async () => {
     setLoading(true);
     setError(null);
@@ -62,7 +57,6 @@ export default function ReportPage() {
 
       const data: Dashboard[] = await res.json();
       const found = data.find((d) => d.route_id === cleanId);
-      console.log("📊 Полученные отчёты:", data);
       if (!found) throw new Error("Отчёт не найден");
       setDashboard(found);
 
@@ -87,6 +81,7 @@ export default function ReportPage() {
       setLoading(false);
     }
   };
+
   const handleDeleteGraph = async (graphName: string) => {
     if (!dashboard) return;
     const updated = {
@@ -94,16 +89,15 @@ export default function ReportPage() {
       graphs: dashboard.graphs?.filter((g) => g.name !== graphName),
     };
 
-    await fetch(`${backendUrl}/api/v1/dashboards/${dashboard.id}`, {
+    await fetch(`${backendUrl}/api/v1/dashboards/${dashboard.route_id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updated),
     });
 
-    setDashboard(updated);
+    await fetchDashboard();
   };
   const handleEditGraph = (graph: Graph) => {
-    console.log("✏️ Выбран график для редактирования:", graph);
     setEditingGraph(graph);
   };
   const handleCloseEdit = () => {
