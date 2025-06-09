@@ -36,13 +36,20 @@ useEffect(() => {
     }
 
     if (filters.department) params.department = filters.department;
-    if (filters.status) params.attrition = filters.status === 'inactive';
+    if (filters.status === 'active') {
+        params.attrition = false;
+    }
+    if (filters.status === 'inactive') {
+        params.attrition = true;
+    }
     if (filters.sortBy) params.sort_by = filters.sortBy;
     if (filters.sortOrder) params.sort_order = filters.sortOrder;
 
     try {
       const res = await axios.get(`${url}/api/v1/employees/`, { params });
-      setEmployees(res.data.employees ?? []);
+      const rawEmployees = res.data.employees ?? [];
+      const mappedEmployees = rawEmployees.map(mapEmployee);
+      setEmployees(mappedEmployees);
       setTotalCount(res.data.total ?? 0); // Убедись, что API возвращает `total`
     } catch (err) {
       console.error('Ошибка при загрузке сотрудников:', err);
@@ -51,6 +58,18 @@ useEffect(() => {
 
   fetchEmployees();
 }, [filters, searchTerm, currentPage]);
+
+  const mapEmployee = (raw: any): Employee => ({
+  id: raw.employee_id,
+  name: raw.full_name ?? '??',
+  email: raw.email ?? '',
+  phone: raw.phone ?? '',
+  avatar: raw.avatar ?? null,
+  position: raw.job_role ?? '',
+  department: raw.department ?? '',
+  status: raw.attrition ? 'inactive' : 'active',
+  startDate: raw.review_date ?? '',
+  });
 
 
   // Загружаем список департаментов
