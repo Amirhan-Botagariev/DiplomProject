@@ -38,7 +38,7 @@ interface Graph {
   description?: string;
   query_type: string;
   query: string;
-  chart_type: "bar" | "line" | "pie" | "scatter" | "histogram" | "gauge" | "stacked_bar";
+  chart_type: "bar" | "line" | "pie" | "scatter" | "histogram" | "stacked_bar";
   legend?: string;
   ox_name?: string;
   oy_name?: string;

@@ -36,7 +36,6 @@ const ChartConfigStep: React.FC<Props> = ({ ox, oy, legend, onChange, chartType 
           <option value="pie">Pie</option>
           <option value="scatter">Scatter</option>
           <option value="histogram">Histogram</option>
-          <option value="gauge">Gauge</option>
           <option value="stacked_bar">Stacked Bar</option>
         </select>
       </div>
