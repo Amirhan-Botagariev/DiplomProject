@@ -5,6 +5,11 @@ layer(base);
 
 @custom-variant dark (&:is(.dark *));
 
+.react-grid-item.react-grid-placeholder {
+  background: rgba(59, 130, 246, 0.3);
+  border: none !important;
+}
+
 @theme {
   --font-*: initial;
   --font-outfit: Outfit, sans-serif;
