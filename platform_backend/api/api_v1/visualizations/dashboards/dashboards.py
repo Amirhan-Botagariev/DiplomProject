@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, HTTPException, status, Query, Body
+from fastapi import APIRouter, HTTPException, status, Query, Body, Path
 from sqlalchemy import select
 
 from core.models.db_helper import db_helper
@@ -9,6 +9,7 @@ from core.models.visualizations.dashboard_configurations import (
 )
 from core.schemas.visualizations.dashboard_configurations import (
     DashboardConfigurationBase as SchemaDashboardConfig,
+    DashboardConfigurationUpdate as SchemaDashboardConfigUpdate,
 )
 
 router = APIRouter()
@@ -67,3 +68,36 @@ async def add_graph_to_dashboard(
             await db.rollback()
             print("❌ Ошибка:", str(e))
             return {"message": f"Ошибка: {str(e)}", "status": 0}
+
+
+@router.put(
+    "/{dashboard_id}",
+    summary="Обновить конфигурацию дэшборда",
+    description="Обновляет поля дэшборда по его ID, включая список графиков.",
+)
+async def update_dashboard_configuration(
+    dashboard_id: int = Path(..., description="ID дэшборда"),
+    updated_dashboard: SchemaDashboardConfigUpdate = Body(...),
+):
+    async with db_helper.session_getter() as db:
+        try:
+            result = await db.execute(
+                select(DBDashboardConfig).where(DBDashboardConfig.id == dashboard_id)
+            )
+            dashboard = result.scalar_one_or_none()
+
+            if not dashboard:
+                raise HTTPException(status_code=404, detail="Дэшборд не найден")
+
+            dashboard.name = updated_dashboard.name
+            dashboard.description = updated_dashboard.description
+            dashboard.route_id = updated_dashboard.route_id
+            dashboard.graphs = updated_dashboard.graphs
+
+            await db.commit()
+            await db.refresh(dashboard)
+
+            return {"message": "Конфигурация дэшборда обновлена", "status": 1}
+        except Exception as e:
+            await db.rollback()
+            raise HTTPException(status_code=500, detail=f"Ошибка обновления: {str(e)}")

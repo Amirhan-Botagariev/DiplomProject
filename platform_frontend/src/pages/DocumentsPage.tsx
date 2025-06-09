@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Search, Filter, FileText, Download, Calendar, ChevronDown, Plus, MoreHorizontal } from 'lucide-react';
-import DocumentCard from '../components/Cards/DocumentCard.tsx';
-import { Document } from '../components/Cards/DocumentCard.tsx';
+import DocumentCard from '../components/cards/DocumentCard.tsx';
+import { Document } from '../components/cards/DocumentCard.tsx';
 
 const documentsData: Document[] = [
   {

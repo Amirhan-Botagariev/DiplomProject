@@ -35,3 +35,13 @@ class DashboardConfigurationCreate(DashboardConfigurationBase):
 
 class DashboardConfigurationUpdate(DashboardConfigurationBase):
     pass
+
+class GraphSchema(BaseModel):
+    name: str
+    description: Optional[str]
+    query_type: str
+    query: str
+    chart_type: str
+    legend: Optional[str]
+    ox_name: Optional[str]
+    oy_name: Optional[str]

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Search, Filter, Calendar, ChevronDown, Bookmark, MessageSquare, Eye } from 'lucide-react';
-import NewsCard from '../components/Cards/NewsCard.tsx';
-import FeaturedNewsCard from '../components/Cards/FeaturedNewsCard';
-import { News as NewsType } from '../components/Cards/NewsCard.tsx';
+import NewsCard from '../components/cards/NewsCard.tsx';
+import FeaturedNewsCard from '../components/cards/FeaturedNewsCard';
+import { News as NewsType } from '../components/cards/NewsCard.tsx';
 
 const newsData: NewsType[] = [
   {

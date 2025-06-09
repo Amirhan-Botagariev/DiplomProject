@@ -1,5 +1,4 @@
 import React from 'react';
-import { StepValidation } from './reportCreation/useReportCreation';
 
 interface ReportModalFooterProps {
   currentStep: number;
@@ -7,7 +6,8 @@ interface ReportModalFooterProps {
   onBack: () => void;
   onNext: () => void;
   onComplete: () => void;
-  validation: StepValidation;
+  validation: { isValid: boolean; message?: string };
+  mode?: 'create' | 'edit';
 }
 
 const ReportModalFooter: React.FC<ReportModalFooterProps> = ({
@@ -17,6 +17,7 @@ const ReportModalFooter: React.FC<ReportModalFooterProps> = ({
   onNext,
   onComplete,
   validation,
+  mode = 'create',
 }) => {
   const isFirstStep = currentStep === 1;
   const isLastStep = currentStep === totalSteps;
@@ -25,8 +26,8 @@ const ReportModalFooter: React.FC<ReportModalFooterProps> = ({
     <div className="pt-6 pb-4 px-6 bg-gray-50 rounded-b-lg">
       <div className="flex items-center justify-between">
         <div>
-          {validation.errorMessage && (
-            <p className="text-sm text-red-600 mb-0">{validation.errorMessage}</p>
+          {validation.message && (
+            <p className="text-sm text-red-600 mb-0">{validation.message}</p>
           )}
         </div>
         <div className="flex items-center space-x-3">
@@ -62,7 +63,7 @@ const ReportModalFooter: React.FC<ReportModalFooterProps> = ({
                   ? 'opacity-50 cursor-not-allowed' 
                   : 'hover:bg-indigo-700'}`}
             >
-              Создать отчёт
+              {mode === 'edit' ? 'Сохранить' : 'Создать отчёт'}
             </button>
           )}
         </div>

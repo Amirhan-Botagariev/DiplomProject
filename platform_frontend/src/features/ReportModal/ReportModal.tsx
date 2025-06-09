@@ -9,12 +9,14 @@ import ReportModalFooter from './ReportModalFooter';
 import BasicInfoStep from './steps/BasicInfoStep';
 import QueryConfigStep from "./steps/QueryConfigStep.tsx";
 import ChartConfigStep from './steps/ChartConfigStep';
+import { Graph } from "../../lib/types.ts";
 
 interface ReportModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
   routeId: string;
+  initialGraph?: Graph;
 }
 
 const steps = ['Основное', 'Запрос', 'Настройки графика'];

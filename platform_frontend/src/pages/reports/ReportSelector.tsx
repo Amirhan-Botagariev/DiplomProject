@@ -19,6 +19,8 @@ import GridLayout from "react-grid-layout";
 import ReportModal from "../../features/ReportModal/ReportModal.tsx";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
+import GraphMenu from "../../components/reports/GraphMenu.tsx"
+import EditReportModal from "../../features/ReportModal/EditReportModal";
 
 ChartJS.register(
   CategoryScale,
@@ -33,26 +35,7 @@ ChartJS.register(
   Colors
 );
 
-interface Graph {
-  name: string;
-  description?: string;
-  query_type: string;
-  query: string;
-  chart_type: "bar" | "line" | "pie" | "scatter" | "histogram" | "stacked_bar";
-  legend?: string;
-  ox_name?: string;
-  oy_name?: string;
-}
-
-interface Dashboard {
-  id: number;
-  name: string;
-  route_id: string;
-  description?: string;
-  category?: string;
-  graphs?: Graph[];
-}
-
+import {Graph, Dashboard} from "../../lib/types.ts";
 export default function ReportPage() {
   const { id } = useParams<{ id: string }>();
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -62,7 +45,13 @@ export default function ReportPage() {
   const [error, setError] = useState<string | null>(null);
   const [graphData, setGraphData] = useState<Record<string, any>>({});
   const [isDragging, setIsDragging] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [editingGraph, setEditingGraph] = useState<Graph | undefined>();
+
+      console.log("🧭 useParams().id:", id);
+    console.log("🧼 cleanId:", cleanId);
+    console.log("🛠 editingGraph:", editingGraph);
+    console.log("📤 routeId передаётся в EditReportModal:", cleanId || '');
   const fetchDashboard = async () => {
     setLoading(true);
     setError(null);
@@ -97,6 +86,28 @@ export default function ReportPage() {
     } finally {
       setLoading(false);
     }
+  };
+  const handleDeleteGraph = async (graphName: string) => {
+    if (!dashboard) return;
+    const updated = {
+      ...dashboard,
+      graphs: dashboard.graphs?.filter((g) => g.name !== graphName),
+    };
+
+    await fetch(`${backendUrl}/api/v1/dashboards/${dashboard.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updated),
+    });
+
+    setDashboard(updated);
+  };
+  const handleEditGraph = (graph: Graph) => {
+    console.log("✏️ Выбран график для редактирования:", graph);
+    setEditingGraph(graph);
+  };
+  const handleCloseEdit = () => {
+    setEditingGraph(undefined);
   };
 
   // теперь useEffect вызывает её
@@ -194,7 +205,7 @@ export default function ReportPage() {
         </div>
         <button
           className="text-sm bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-          onClick={() => setModalOpen(true)}
+          onClick={() => setCreateModalOpen(true)}
         >
           Добавить новый график
         </button>
@@ -215,7 +226,15 @@ export default function ReportPage() {
         onResizeStop={() => setIsDragging(false)}
       >
         {dashboard.graphs?.map((graph) => (
-          <div key={graph.name} className="bg-white rounded shadow p-4 overflow-hidden">
+          <div key={graph.name} className="bg-white rounded shadow p-4 overflow-hidden relative">
+            {/* Меню с троеточием */}
+            <div className="absolute top-2 right-2 z-10">
+              <GraphMenu
+                onDelete={() => handleDeleteGraph(graph.name)}
+                onEdit={() => handleEditGraph(graph)}
+              />
+            </div>
+
             <h2 className="text-lg font-semibold mb-2">{graph.name}</h2>
             {graph.description && <p className="text-sm text-gray-500 mb-2">{graph.description}</p>}
             <div className="w-full h-[calc(100%-3rem)]">
@@ -224,13 +243,22 @@ export default function ReportPage() {
           </div>
         ))}
       </GridLayout>
+    <ReportModal
+      isOpen={createModalOpen}
+      onClose={() => setCreateModalOpen(false)}
+      onSuccess={fetchDashboard}
+      routeId={cleanId || ''}
+    />
 
-      <ReportModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onSuccess={() => fetchDashboard()}
+    {editingGraph && (
+      <EditReportModal
+        isOpen={!!editingGraph}
+        onClose={handleCloseEdit}
+        onSuccess={fetchDashboard}
+        initialGraph={editingGraph}
         routeId={cleanId || ''}
       />
+    )}
     </div>
   );
 }
