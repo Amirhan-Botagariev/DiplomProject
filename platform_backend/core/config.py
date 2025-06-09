@@ -11,7 +11,6 @@ ENV_FILENAMES = [
     ".env.backend",
     ".env.db",
     ".env.pgadmin",
-    ".env.metabase",
     ".env.frontend",
 ]
 ENV_FILES = [BASE_DIR / "sys/env" / name for name in ENV_FILENAMES]
@@ -75,7 +74,6 @@ class ApiV1Prefix(BaseModel):
     auth: str = "/auth"
     messages: str = "/messages"
     predict: str = "/predict"
-    metabase: str = "/metabase"
     predefined_sources: str = "/sources"
     query: str = "/query"
     dashboards: str = "/dashboards"
@@ -163,21 +161,6 @@ class UserDefaultConfig(BaseModel):
     is_verified: bool = True
 
 
-class MetabaseSettings(BaseModel):
-    site_url: str
-    embedding_secret_key: SecretStr
-    db_type: str
-    db_dbname: str
-    db_port: int
-    db_user: str
-    db_pass: str
-    db_host: str
-    anon_tracking_enabled: bool = False
-    embed_expiry_minutes: int = 10
-    username: str = "admin@admin.com"
-    password: SecretStr = "Qwerty123456!"
-
-
 class ScriptConfig(BaseModel):
     path_to_file: str = "system/load_data_script/data/init.sql"
 
@@ -197,7 +180,6 @@ class Settings(BaseSettings):
     access_token: AccessToken
     user_default: UserDefaultConfig = UserDefaultConfig()
     prediction_model_config: PredictionModelConfig = PredictionModelConfig()
-    metabase: MetabaseSettings
     script_config: ScriptConfig = ScriptConfig()
 
 
