@@ -4,10 +4,6 @@ import {
   DashboardIcon,
   ReportsIcon,
   UsersIcon,
-  OrdersIcon,
-  DepartmentsIcon,
-  HelpIcon,
-  SettingsIcon,
   ArrowRightIcon,
   ArrowDownIcon,
   NotificationIcon
@@ -77,18 +73,17 @@ const Sidebar = ({
       icon: <ReportsIcon />,
       children: [
         { id: 1, name: "Командировки", route_id: "reports/travel" },
-        { id: 2, name: "Риск ухода (вероятность)", route_id: "reports/retention-risk" },
-        { id: 3, name: "Пол и семейное положение", route_id: "reports/demo-gender" },
-        { id: 4, name: "Возрастной профиль", route_id: "reports/demo-age" },
-        { id: 5, name: "По отделам", route_id: "reports/org-department" },
-        { id: 6, name: "Тренинги vs текучка", route_id: "reports/training-vs-attrition" },
-        { id: 7, name: "Образование", route_id: "reports/demo-education" },
-        { id: 8, name: "По ролям и уровням", route_id: "reports/org-role" },
-        { id: 9, name: "Стаж в компании", route_id: "reports/tenure-company" },
-        { id: 10, name: "Тренинги за год", route_id: "reports/training-year" },
-        { id: 11, name: "Стаж в текущей роли / с менеджером", route_id: "reports/tenure-role" },
-        { id: 12, name: "Текучка по отделам", route_id: "reports/retention-dept" },
-        { id: 13, name: "Баланс работа–жизнь", route_id: "reports/work-life" },
+        { id: 2, name: "Пол и семейное положение", route_id: "reports/demo-gender" },
+        { id: 3, name: "Возрастной профиль", route_id: "reports/demo-age" },
+        { id: 4, name: "По отделам", route_id: "reports/org-department" },
+        { id: 5, name: "Тренинги vs текучка", route_id: "reports/training-vs-attrition" },
+        { id: 6, name: "Образование", route_id: "reports/demo-education" },
+        { id: 7, name: "По ролям и уровням", route_id: "reports/org-role" },
+        { id: 8, name: "Стаж в компании", route_id: "reports/tenure-company" },
+        { id: 9, name: "Тренинги за год", route_id: "reports/training-year" },
+        { id: 10, name: "Стаж в текущей роли / с менеджером", route_id: "reports/tenure-role" },
+        { id: 11, name: "Текучка по отделам", route_id: "reports/retention-dept" },
+        { id: 12, name: "Баланс работа–жизнь", route_id: "reports/work-life" },
       ],
     },
     {
@@ -104,28 +99,11 @@ const Sidebar = ({
       route: "/employees/list",
     },
     {
-      id: "orders",
-      label: "Приказы",
-      icon: <OrdersIcon />,
-      route: "/orders",
-    },
-    {
-      id: "departments",
-      label: "Подразделения",
-      icon: <DepartmentsIcon />,
-      route: "/departments",
-    },
-    {
       id: "notifications",
       label: "Уведомления",
       icon: <NotificationIcon />,
       route: "/notifications"
     },
-  ];
-
-  const bottomItems = [
-    { id: "help", label: "Помощь", icon: <HelpIcon />, route: "/help" },
-    { id: "settings", label: "Настройки", icon: <SettingsIcon />, route: "/settings" },
   ];
 
   return (
@@ -211,46 +189,6 @@ const Sidebar = ({
               );
             })}
           </nav>
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <button
-            onClick={() => toggleOpen("extra")}
-            className="flex items-center justify-between text-black hover:bg-gray-100 rounded-lg px-3 py-3 text-sm font-semibold w-full"
-          >
-            <div className="flex items-center gap-3">
-              <SettingsIcon className="w-5 h-5" />
-              {!collapsed && "Дополнительно"}
-            </div>
-            {!collapsed && (
-              <ArrowDownIcon
-                className={`w-3 h-3 transition-transform duration-300 ${
-                  openItems["extra"] ? "rotate-180" : ""
-                }`}
-              />
-            )}
-          </button>
-
-
-          {!collapsed && openItems["extra"] && (
-            <div className="ml-8 flex flex-col gap-2">
-              {bottomItems.map(({ id, label, icon, route }) => {
-                const bottomActive = location.pathname === route;
-                return (
-                  <Link
-                    key={id}
-                    to={route!}
-                    className={`flex items-center gap-3 text-sm px-3 py-2 rounded-lg transition w-full ${
-                      bottomActive ? "bg-[#5FB3F6] text-white" : "hover:bg-gray-100 text-black"
-                    }`}
-                  >
-                    <div className="w-5 h-5">{icon}</div>
-                    {!collapsed && label}
-                  </Link>
-                );
-              })}
-            </div>
-          )}
         </div>
       </div>
     </aside>

@@ -1,17 +1,7 @@
-from typing import TYPE_CHECKING, Annotated
-
-from fastapi import Depends
-
+from fastapi_users_db_sqlalchemy.access_token import SQLAlchemyAccessTokenDatabase
 from core.models import db_helper, AccessToken
 
-if TYPE_CHECKING:
-    from sqlalchemy.ext.asyncio import AsyncSession
 
-
-async def get_access_tokens_db(
-    session: Annotated[
-        "AsyncSession",
-        Depends(db_helper.session_getter),
-    ],
-):
-    yield AccessToken.get_db(session=session)
+async def get_access_tokens_db():
+    async with db_helper.session_getter() as session:
+        yield SQLAlchemyAccessTokenDatabase(session, AccessToken)

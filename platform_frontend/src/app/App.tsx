@@ -1,6 +1,7 @@
 // src/App.tsx
 import { useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Sidebar from "../layout/Sidebar.tsx";
 import Header from "../layout/Header.tsx";
 import Dashboard from "../pages/Dashboard.tsx";
@@ -15,34 +16,39 @@ import EmployeesListPage from "../pages/EmployeesListPage";
 import JobRolesPage from "../pages/JobRolesPage";
 import NewsPage from "../pages/NewsPage.tsx"; // убедись в правильном пути
 import DocumentsPage from "../pages/DocumentsPage.tsx";
+import LoginPage from "../pages/LoginPage.tsx";
 
 export default function App() {
   const [collapsed, setCollapsed] = useState(false);
+  const location = useLocation();
+
+  const isLoginPage = location.pathname === "/";
 
   return (
-    <BrowserRouter>
-      <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
-      <div className={`transition-all ${collapsed ? "ml-[80px]" : "ml-[260px]"} flex flex-col`}>
-        <Header />
+    <>
+      {!isLoginPage && <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />}
+      <div className={`transition-all ${!isLoginPage && (collapsed ? "ml-[80px]" : "ml-[260px]")} flex flex-col`}>
+        {!isLoginPage && <Header />}
         <div className="p-6">
-            <Routes>
-              <Route path="/" element={<Navigate to="/dashboard" />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/news" element={<NewsPage />} />
-              <Route path="/documents" element={<DocumentsPage  />} />
-              <Route path="/reports/:type" element={<ReportSelector />} /> {/* Страница выбора отчетов по типу */}
-              <Route path="/reports/:type/:id" element={<DashboardPage />} /> {/* Страница отдельного отчета */}
-              <Route path="/reports/demo-age" element={<DemoAgeReportPage />} />
-              <Route path="/reports/demo-gender" element={<DemoGenderReportPage />} />
-              <Route path="/reports/demo-education" element={<DemoEducationReportPage />} />
-              <Route path="/notifications" element={<NotificationsPage />} />
-              <Route path="/notifications/:category" element={<RiskCategoryPage />} />
-              <Route path="/employees/list" element={<EmployeesListPage />} />
-              <Route path="/employees/positions" element={<JobRolesPage />} />
-              <Route path="/my-reports/:id" element={<ReportSelector />} />
-            </Routes>
+          <Routes>
+            <Route path="/" element={<LoginPage />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/news" element={<NewsPage />} />
+            <Route path="/documents" element={<DocumentsPage  />} />
+            <Route path="/reports/:type" element={<ReportSelector />} /> {/* Страница выбора отчетов по типу */}
+            <Route path="/reports/:type/:id" element={<DashboardPage />} /> {/* Страница отдельного отчета */}
+            <Route path="/reports/demo-age" element={<DemoAgeReportPage />} />
+            <Route path="/reports/demo-gender" element={<DemoGenderReportPage />} />
+            <Route path="/reports/demo-education" element={<DemoEducationReportPage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
+            <Route path="/notifications/:category" element={<RiskCategoryPage />} />
+            <Route path="/employees/list" element={<EmployeesListPage />} />
+            <Route path="/employees/positions" element={<JobRolesPage />} />
+            <Route path="/my-reports/:id" element={<ReportSelector />} />
+          </Routes>
         </div>
       </div>
-    </BrowserRouter>
+    </>
   );
 }

@@ -11,7 +11,7 @@ from libraries.fastapi_users.dependencies.authentication.user_manager import (
 )  # твоя функция
 
 fastapi_users = FastAPIUsers[User, UUID](
-    get_user_manager=cast(UserManagerDependency[User, UUID], get_user_manager),
+    get_user_manager=get_user_manager,
     auth_backends=[authentication_backend],
 )
 
