@@ -11,6 +11,7 @@ from core.schemas.visualizations.dashboard_configurations import (
     DashboardConfigurationBase as SchemaDashboardConfig,
     DashboardConfigurationUpdate as SchemaDashboardConfigUpdate,
 )
+from services.kafka.kafka_service import send_kafka_event
 
 router = APIRouter()
 
@@ -54,27 +55,26 @@ async def add_graph_to_dashboard(
                     "status": 0,
                 }
 
-            print("📍 Было графиков:", len(dashboard.graphs or []))
-            # заменяем новым списком, чтобы SQLAlchemy отследил изменение
             dashboard.graphs = (dashboard.graphs or []) + [new_graph]
-
             await db.commit()
             await db.refresh(dashboard)
-            print("✅ Новый график добавлен. Всего графиков:", len(dashboard.graphs))
+
+            await send_kafka_event(
+                "graph_added",
+                {
+                    "route_id": dashboard.route_id,
+                    "graph_name": new_graph.get("name"),
+                },
+            )
 
             return {"message": f"График добавлен в {dashboard.name}", "status": 1}
 
         except Exception as e:
             await db.rollback()
-            print("❌ Ошибка:", str(e))
             return {"message": f"Ошибка: {str(e)}", "status": 0}
 
 
-@router.put(
-    "/{dashboard_id}",
-    summary="Обновить конфигурацию дэшборда",
-    description="Обновляет поля дэшборда по его ID, включая список графиков.",
-)
+@router.put("/{dashboard_id}")
 async def update_dashboard_configuration(
     dashboard_id: str = Path(..., description="route_id дэшборда"),
     updated_dashboard: SchemaDashboardConfigUpdate = Body(...),
@@ -101,16 +101,22 @@ async def update_dashboard_configuration(
             await db.commit()
             await db.refresh(dashboard)
 
+            await send_kafka_event(
+                "dashboard_updated",
+                {
+                    "route_id": dashboard.route_id,
+                    "name": dashboard.name,
+                    "graph_count": len(dashboard.graphs or []),
+                },
+            )
+
             return {"message": "Конфигурация дэшборда обновлена", "status": 1}
         except Exception as e:
             await db.rollback()
             raise HTTPException(status_code=500, detail=f"Ошибка обновления: {str(e)}")
 
-@router.delete(
-    "/{dashboard_id}",
-    summary="Удалить конфигурацию дэшборда",
-    description="Удаляет дэшборд по route_id.",
-)
+
+@router.delete("/{dashboard_id}")
 async def delete_dashboard(
     dashboard_id: str = Path(..., description="route_id дэшборда"),
 ):
@@ -125,5 +131,10 @@ async def delete_dashboard(
 
         await db.delete(dashboard)
         await db.commit()
+
+        await send_kafka_event(
+            "dashboard_deleted",
+            {"route_id": dashboard.route_id, "name": dashboard.name},
+        )
 
         return {"message": "Дэшборд удалён", "status": 1}
