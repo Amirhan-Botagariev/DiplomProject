@@ -1,44 +1,69 @@
 import React, { useState, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { X } from 'lucide-react';
+import { Employee } from '../../components/employeeList/employee';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (newEmployee: Employee) => void;
 }
 
 const EmployeeCreateModal: React.FC<Props> = ({ isOpen, onClose, onSuccess }) => {
   const [form, setForm] = useState({
     name: '',
-    iin: '',
-    birth_date: '',
-    gender: '',
+    age: 30,
+    education_level: 3,
+    department: 'Research & Development',
+    position: 'Research Scientist',
   });
 
-  const handleChange = (key: string, value: string) => {
+  const departmentMap: Record<string, number> = {
+    'Research & Development': 1,
+    'Sales': 2,
+    'Human Resources': 3,
+  };
+
+  const jobRoleMap: Record<string, number> = {
+    'Research Scientist': 1,
+    'Sales Executive': 2,
+    'Laboratory Technician': 3,
+  };
+
+  const handleChange = (key: string, value: string | number) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleSubmit = async () => {
-    try {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/employees/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
+    // 🧠 Фейковое создание объекта
+    const fakeNewEmployee: Employee = {
+      id: Math.floor(Math.random() * 100000), // временный ID
+      name: form.name || 'Без имени',
+      age: form.age,
+      education_level: form.education_level,
+      department: form.department,
+      position: form.position,
+      status: 'active',
+      email: '',
+      phone: '',
+      avatar: null,
+      startDate: new Date().toISOString().split('T')[0],
 
-      const result = await res.json();
+      // Дополнительные поля
+      gender: 'Male',
+      marital_status: 'Single',
+      education_field: 'Life Sciences',
+      job_level: 1,
+      job_involvement: 2,
+      job_satisfaction: 2,
+      performance_rating: 3,
+      years_at_company: 1,
+      risk: 0.1,
+    };
 
-      if (!res.ok) {
-        throw new Error(result.message || 'Ошибка при создании');
-      }
-
-      onSuccess();
-      onClose();
-    } catch (err: any) {
-      alert('❌ ' + err.message);
-    }
+    await new Promise(res => setTimeout(res, 300)); // фейковая задержка
+    onSuccess(fakeNewEmployee);
+    onClose();
   };
 
   return (
@@ -69,6 +94,7 @@ const EmployeeCreateModal: React.FC<Props> = ({ isOpen, onClose, onSuccess }) =>
               <div>
                 <label className="block text-sm font-medium">Имя</label>
                 <input
+                  type="text"
                   className="mt-1 w-full border px-3 py-2 rounded"
                   value={form.name}
                   onChange={(e) => handleChange('name', e.target.value)}
@@ -76,34 +102,48 @@ const EmployeeCreateModal: React.FC<Props> = ({ isOpen, onClose, onSuccess }) =>
               </div>
 
               <div>
-                <label className="block text-sm font-medium">ИИН</label>
+                <label className="block text-sm font-medium">Возраст</label>
                 <input
+                  type="number"
                   className="mt-1 w-full border px-3 py-2 rounded"
-                  value={form.iin}
-                  onChange={(e) => handleChange('iin', e.target.value)}
+                  value={form.age}
+                  onChange={(e) => handleChange('age', Number(e.target.value))}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium">Дата рождения</label>
+                <label className="block text-sm font-medium">Образование (1-5)</label>
                 <input
-                  type="date"
+                  type="number"
                   className="mt-1 w-full border px-3 py-2 rounded"
-                  value={form.birth_date}
-                  onChange={(e) => handleChange('birth_date', e.target.value)}
+                  value={form.education_level}
+                  onChange={(e) => handleChange('education_level', Number(e.target.value))}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium">Пол</label>
+                <label className="block text-sm font-medium">Департамент</label>
                 <select
                   className="mt-1 w-full border px-3 py-2 rounded"
-                  value={form.gender}
-                  onChange={(e) => handleChange('gender', e.target.value)}
+                  value={form.department}
+                  onChange={(e) => handleChange('department', e.target.value)}
                 >
-                  <option value="">Выберите</option>
-                  <option value="male">Мужской</option>
-                  <option value="female">Женский</option>
+                  {Object.keys(departmentMap).map(dep => (
+                    <option key={dep} value={dep}>{dep}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium">Должность</label>
+                <select
+                  className="mt-1 w-full border px-3 py-2 rounded"
+                  value={form.position}
+                  onChange={(e) => handleChange('position', e.target.value)}
+                >
+                  {Object.keys(jobRoleMap).map(role => (
+                    <option key={role} value={role}>{role}</option>
+                  ))}
                 </select>
               </div>
             </div>
